@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QResto — Valoración de Mercado</title>
+  <style>
+    @page { margin: 2cm; size: A4; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.55;
+      font-size: 11pt;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      color: #0f4c5c;
+      font-size: 24pt;
+      margin-bottom: 0.2em;
+      border-bottom: 3px solid #0f4c5c;
+      padding-bottom: 0.3em;
+    }
+    h2 {
+      color: #0f4c5c;
+      font-size: 15pt;
+      margin-top: 1.6em;
+      page-break-after: avoid;
+    }
+    h3 {
+      color: #2d6a4f;
+      font-size: 12pt;
+      margin-top: 1.2em;
+      page-break-after: avoid;
+    }
+    .meta {
+      color: #555;
+      font-size: 10pt;
+      margin-bottom: 2em;
+    }
+    .summary-box {
+      background: #f0f7f4;
+      border-left: 4px solid #2d6a4f;
+      padding: 14px 16px;
+      margin: 1em 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1em 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #0f4c5c;
+      color: white;
+      font-weight: 600;
+    }
+    tr:nth-child(even) { background: #f8f8f8; }
+    ul { margin: 0.4em 0; padding-left: 1.4em; }
+    li { margin: 0.25em 0; }
+    .note { font-size: 9.5pt; color: #666; font-style: italic; }
+    .score { font-size: 14pt; font-weight: bold; color: #0f4c5c; }
+    .footer {
+      margin-top: 2.5em;
+      padding-top: 1em;
+      border-top: 1px solid #ddd;
+      font-size: 9pt;
+      color: #777;
+    }
+    .tag {
+      display: inline-block;
+      background: #e8f4f8;
+      color: #0f4c5c;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9pt;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>QResto — Valoración de Mercado</h1>
+<p class="meta">
+  <span class="tag">Documento estratégico</span>
+  <span class="tag">España / Canarias</span>
+  <span class="tag">Hostelería</span><br>
+  Fecha: 22 de junio de 2026 · Versión 1.0
+</p>
+
+<div class="summary-box">
+  <strong>Resumen ejecutivo:</strong> Hay demanda real, mucha competencia, y un hueco para quien se enfoque en bares pequeños y turismo en Canarias — no para competir de golpe con los TPV grandes de toda España. <strong>Nota global: 6,5–7 / 10</strong> — proyecto viable con nicho claro.
+</div>
+
+<h2>1. El mercado en una frase</h2>
+<p>Hay demanda real, mucha competencia, y un hueco para quien se enfoque en <strong>bares pequeños y turismo en Canarias</strong> — no para competir de golpe con los TPV grandes de toda España.</p>
+
+<h2>2. Tamaño y tendencia del mercado (España)</h2>
+<table>
+  <tr><th>Dato</th><th>Qué significa para QResto</th></tr>
+  <tr><td>+300.000 establecimientos de hostelería</td><td>Mercado enorme</td></tr>
+  <tr><td>Digitalización prioritaria en 2026 (Hostelería de España)</td><td>Los dueños ya piensan en tecnología</td></tr>
+  <tr><td>Carta QR = expectativa del cliente</td><td>Ya no es "innovación rara"</td></tr>
+  <tr><td>Alérgenos obligatorios (UE) + sanciones graves</td><td>Quien cumpla bien gana confianza</td></tr>
+  <tr><td>Márgenes ajustados + falta de personal</td><td>Buscan reducir costes y errores</td></tr>
+</table>
+<p><strong>Conclusión:</strong> El mercado existe y crece en digitalización. No partes de cero educando al sector.</p>
+
+<h2>3. Tipos de competidores</h2>
+
+<h3>Tipo A — Solo carta digital (entrada barata)</h3>
+<p><strong>Ejemplos:</strong> Qrusty, AppCarta (EterSystem), generadores de QR genéricos</p>
+<table>
+  <tr><th>Qué ofrecen</th><th>Precio orientativo</th></tr>
+  <tr><td>Carta online, QR, alérgenos, a veces idiomas</td><td>~15–30 €/mes</td></tr>
+  <tr><td>No suelen tener pedidos, mesas ni contabilidad</td><td>—</td></tr>
+</table>
+<p><strong>Fortaleza:</strong> Barato y fácil. <strong>Debilidad:</strong> No resuelve operativa del local.</p>
+
+<h3>Tipo B — TPV completo "todo en uno" (competencia fuerte)</h3>
+<p><strong>Ejemplos:</strong> Last.app, Glop, Ágora, Cover Manager, SmartBar</p>
+<table>
+  <tr><th>Qué ofrecen</th><th>Precio orientativo</th></tr>
+  <tr><td>TPV, comandas, cocina, QR, reservas, stock, informes, delivery</td><td>~50–160 €/mes (o licencia + módulos)</td></tr>
+  <tr><td>Last.app: QR + pedido + pago (~1,5 % por transacción QR)</td><td>Desde ~59 €/mes</td></tr>
+  <tr><td>Glop: sin cuota mensual, pagas licencia y módulos</td><td>Modelo mixto</td></tr>
+</table>
+<p><strong>Fortaleza:</strong> Muy completo, marca conocida, soporte. <strong>Debilidad:</strong> Caro, complejo, curva de aprendizaje alta.</p>
+
+<h3>Tipo C — Especialistas en pedido/pago QR en mesa</h3>
+<p><strong>Ejemplos:</strong> Honei, Wingloud (Gran Canaria), módulos QR de Ágora/Glop</p>
+<table>
+  <tr><th>Qué ofrecen</th><th>Enfoque</th></tr>
+  <tr><td>Cliente escanea, pide y paga desde móvil</td><td>Rotación de mesas, menos esperas</td></tr>
+  <tr><td>Wingloud: desde Gran Canaria, modo mesa y fast food</td><td>Competidor directo en Canarias</td></tr>
+</table>
+
+<h3>Tipo D — Distribuidores locales en Canarias</h3>
+<p><strong>Ejemplos:</strong> Evo7 (Ágora), SmartBar (Las Palmas), Glop Las Palmas</p>
+<p>Venden + instalan + dan soporte en persona. El dueño confía en "el técnico de la isla". Relación local = ventaja enorme.</p>
+
+<h2>4. QResto vs mercado</h2>
+<table>
+  <tr>
+    <th>Funcionalidad</th>
+    <th>Carta simple (15€)</th>
+    <th>TPV grande (80€+)</th>
+    <th>QResto</th>
+  </tr>
+  <tr><td>Carta QR</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+  <tr><td>Pedido desde mesa</td><td>No / limitado</td><td>Sí</td><td>Sí</td></tr>
+  <tr><td>Llamar camarero</td><td>No</td><td>A veces</td><td>Sí</td></tr>
+  <tr><td>Estado mesas en vivo</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+  <tr><td>Marcar pagado / parcial</td><td>No</td><td>Sí</td><td>Sí (manual al inicio)</td></tr>
+  <tr><td>Contabilidad básica</td><td>No</td><td>Sí avanzada</td><td>Sí</td></tr>
+  <tr><td>Multiidioma turismo</td><td>A veces</td><td>A veces</td><td>Planificado</td></tr>
+  <tr><td>Chatbot turista</td><td>No</td><td>Casi nadie</td><td>Diferenciador</td></tr>
+  <tr><td>Pago móvil</td><td>No</td><td>Sí</td><td>Fase posterior</td></tr>
+  <tr><td>TPV / caja física</td><td>No</td><td>Sí</td><td>No (al inicio)</td></tr>
+  <tr><td>Precio bajo bar pequeño</td><td>Sí</td><td>No</td><td>Objetivo</td></tr>
+</table>
+
+<div class="summary-box">
+  <strong>Hueco de mercado:</strong> Entre la carta barata (solo menú) y el TPV caro (todo o nada).<br>
+  <em>"Operativa de sala + carta + contabilidad simple, sin TPV de 100 €/mes ni comisiones por pedido."</em>
+</div>
+
+<h2>5. Oportunidad en Canarias</h2>
+<table>
+  <tr><th>Factor</th><th>Oportunidad</th></tr>
+  <tr><td>Mucho turismo</td><td>Multiidioma y chatbot tienen sentido real</td></tr>
+  <tr><td>Muchos bares y terrazas</td><td>Miles de locales pequeños</td></tr>
+  <tr><td>Guachinches, chiringuitos, terrazas</td><td>A menudo sin sistema digital</td></tr>
+  <tr><td>Estacionalidad</td><td>Verano: ir rápido; invierno: optimizar costes</td></tr>
+  <tr><td>Conoces el terreno</td><td>Demos en persona, soporte cercano</td></tr>
+  <tr><td>Competidores locales</td><td>Hay mercado pero no saturado al 100 %</td></tr>
+</table>
+<p><strong>Valoración Canarias:</strong> 4/5 como lugar para empezar. Mejor que lanzar en toda España el día 1.</p>
+
+<h2>6. Estimación de clientes e ingresos</h2>
+<table>
+  <tr><th>Escenario</th><th>Locales</th><th>Cuota media</th><th>Ingreso mensual</th></tr>
+  <tr><td>Piloto (año 1)</td><td>5–15 bares</td><td>25–40 €</td><td>125–600 €</td></tr>
+  <tr><td>Crecimiento local (2–3 años)</td><td>50–100 locales</td><td>35–50 €</td><td>1.750–5.000 €</td></tr>
+  <tr><td>Producto maduro</td><td>300+ locales</td><td>45–60 €</td><td>13.500–18.000 €+</td></tr>
+</table>
+<p class="note">Cifras orientativas, no promesas. Como negocio secundario / primer proyecto: viable. Como empresa grande desde el mes 1: requiere tiempo y ejecución.</p>
+
+<h2>7. Análisis SWOT</h2>
+
+<h3>Fortalezas</h3>
+<ul>
+  <li>Idea clara: personal + operativa + contabilidad</li>
+  <li>Enfoque Canarias + turismo (nicho defendible)</li>
+  <li>Chatbot turista: pocos lo tienen bien hecho</li>
+  <li>MVP sin pago móvil = más rápido y menos legal</li>
+  <li>Conocimiento del contexto local</li>
+</ul>
+
+<h3>Debilidades</h3>
+<ul>
+  <li>Marca nueva, cero clientes</li>
+  <li>Sin TPV integrado al principio</li>
+  <li>Necesidad de soporte y fiabilidad (sábados noche)</li>
+  <li>Equipo pequeño al inicio</li>
+</ul>
+
+<h3>Oportunidades</h3>
+<ul>
+  <li>Digitalización empujada por el sector</li>
+  <li>Bares pequeños mal servidos por soluciones caras</li>
+  <li>Turismo e idiomas en Canarias</li>
+  <li>Expansión: península, cadenas, pago móvil</li>
+</ul>
+
+<h3>Amenazas</h3>
+<ul>
+  <li>Last.app, SmartBar, Glop, Wingloud ya en el juego</li>
+  <li>Distribuidores locales con relación establecida</li>
+  <li>Dependencia de WiFi del local</li>
+  <li>Normativa: alérgenos, facturación, VeriFactu</li>
+  <li>Riesgo de ser "otro QR más" sin diferenciación</li>
+</ul>
+
+<h2>8. Valoración global</h2>
+<table>
+  <tr><th>Criterio</th><th>Nota</th><th>Comentario</th></tr>
+  <tr><td>Tamaño de mercado</td><td>9/10</td><td>Hostelería en España es enorme</td></tr>
+  <tr><td>Momento (timing)</td><td>8/10</td><td>Buen momento para digitalización</td></tr>
+  <tr><td>Diferenciación actual</td><td>6/10</td><td>Chatbot + Canarias sube la nota</td></tr>
+  <tr><td>Facilidad de venta</td><td>5/10</td><td>Sector conservador; venta en persona</td></tr>
+  <tr><td>Facilidad técnica (MVP)</td><td>6/10</td><td>Factible, tiempo real no es trivial</td></tr>
+  <tr><td>Competencia</td><td>4/10</td><td>Mucha y con recursos</td></tr>
+  <tr><td>Encaje Canarias</td><td>8/10</td><td>Muy buen mercado inicial</td></tr>
+  <tr><td>Potencial ingresos medio plazo</td><td>7/10</td><td>Si ejecutas bien en un nicho</td></tr>
+</table>
+<p class="score">Nota global: 6,5–7 / 10 — Proyecto viable con nicho claro</p>
+
+<h2>9. ¿Tiene sentido seguir?</h2>
+<p><strong>Sí, tiene sentido</strong> si aceptas:</p>
+<ol>
+  <li>No vendes "tecnología" — vendes <em>menos líos un sábado noche</em> y <em>saber cuánto ganas</em>.</li>
+  <li>Tu primer cliente es un bar de 8–15 mesas en tu zona, no un hotel de 200 mesas.</li>
+  <li>Compites por simplicidad y precio, no por 50 módulos el día 1.</li>
+  <li>Canarias primero es tu mejor carta, no una limitación.</li>
+  <li>El chatbot es gancho comercial del mes 6–12, no del MVP inicial.</li>
+</ol>
+
+<h2>10. Posicionamiento recomendado</h2>
+<div class="summary-box">
+  <strong>QResto</strong> — Carta con QR, pedidos a cocina y control de mesas para bares y restaurantes. Pensado para la hostelería canaria: varios idiomas, ayuda al turista y resumen de cuentas sin complicarse con un TPV de cientos de euros al mes.
+</div>
+<table>
+  <tr><th>Pilar</th><th>Mensaje al dueño</th></tr>
+  <tr><td>Operativa</td><td>El cliente pide solo; tú ves mesas, pedidos y llamadas en una pantalla</td></tr>
+  <tr><td>Turismo</td><td>Carta en varios idiomas + asistente para turistas</td></tr>
+  <tr><td>Economía</td><td>Contabilidad clara sin Excel; cuota fija baja, sin % por pedido (al inicio)</td></tr>
+</table>
+
+<h2>11. Visión del producto acordada</h2>
+<table>
+  <tr><th>Decisión</th><th>Enfoque</th></tr>
+  <tr><td>Nombre</td><td>QResto</td></tr>
+  <tr><td>Pagos</td><td>Sin pago móvil al inicio; preparado para añadirlo después</td></tr>
+  <tr><td>Clientes</td><td>Locales pequeños primero; arquitectura multi-local</td></tr>
+  <tr><td>Mercado</td><td>España → foco Canarias (turismo)</td></tr>
+  <tr><td>Diferenciador</td><td>Chatbot de ayuda para turistas</td></tr>
+</table>
+
+<h2>12. Roadmap de producto</h2>
+<table>
+  <tr><th>Fase</th><th>Contenido</th><th>Mercado</th></tr>
+  <tr><td>1 — MVP</td><td>QR, carta, carrito, llamar camarero, panel mesas/pedidos, admin carta</td><td>Bar pequeño, 1 local</td></tr>
+  <tr><td>2 — Turismo</td><td>Multiidioma, chatbot básico, alérgenos</td><td>Bares turísticos Canarias</td></tr>
+  <tr><td>3 — Negocio</td><td>Contabilidad, marcar pagos, informes</td><td>Venta en serio</td></tr>
+  <tr><td>4 — Escala</td><td>Multi-local, admin central, zonas, cocina</td><td>Restaurantes grandes</td></tr>
+  <tr><td>5 — Pagos</td><td>Pago móvil + cobro en caja</td><td>Producto completo</td></tr>
+</table>
+
+<h2>13. Riesgo principal</h2>
+<p>El mercado no está perdido por falta de demanda. Está <strong>ruidoso</strong> por exceso de ofertas parecidas. Lo que marcará la diferencia:</p>
+<ul>
+  <li>¿Puedes conseguir 3 bares piloto en tu isla?</li>
+  <li>¿Funciona el primer sábado sin llamadas de pánico?</li>
+  <li>¿El dueño entiende el valor en 2 minutos de demo?</li>
+</ul>
+
+<h2>14. Próximos pasos pendientes</h2>
+<ol>
+  <li>Modelo de negocio — planes, precios, freemium o no</li>
+  <li>Funcionalidades exactas del MVP — qué entra y qué no en v1</li>
+  <li>Roles de usuario — cliente, camarero, encargado, admin, dueño cadena</li>
+</ol>
+
+<div class="footer">
+  Documento generado para el proyecto QResto · Carpeta: Projects/QResto/docs · Uso interno y planificación estratégica
+</div>
+
+</body>
+</html>

@@ -1,0 +1,573 @@
+.admin-body {
+  background: #eae8e3;
+  min-height: 100vh;
+}
+
+/* Fix: display:flex en .login-pantalla anulaba el atributo hidden */
+[hidden] {
+  display: none !important;
+}
+
+.btn-panel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: var(--radio-sm);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-panel--primario {
+  background: var(--color-primario);
+  color: white;
+}
+
+.btn-panel--primario:hover {
+  background: var(--color-primario-claro);
+}
+
+.btn-panel--primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Login */
+.login-pantalla {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--color-primario) 0%, #0a2e36 100%);
+}
+
+.login-card {
+  background: white;
+  border-radius: var(--radio);
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: var(--sombra-lg);
+}
+
+.login-card h1 {
+  font-size: 1.35rem;
+  margin-top: 8px;
+  color: var(--color-primario);
+}
+
+.login-card__sub {
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+  margin: 6px 0 24px;
+}
+
+.login-card label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-texto);
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--font);
+  font-size: 1rem;
+  margin-bottom: 16px;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+.login-hint {
+  font-size: 0.8rem;
+  color: var(--color-texto-suave);
+  text-align: center;
+  margin-top: 14px;
+}
+
+.login-hint strong {
+  color: var(--color-primario);
+  font-size: 1.05rem;
+}
+
+.login-url {
+  font-size: 0.75rem;
+  color: var(--color-texto-suave);
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.login-url code {
+  background: var(--color-fondo);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  word-break: break-all;
+}
+
+.login-offline {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: var(--radio-sm);
+  padding: 12px;
+  font-size: 0.85rem;
+  margin-top: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.login-offline code {
+  background: white;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.login-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* Admin layout */
+#admin-app {
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--color-fondo);
+  box-shadow: var(--sombra-lg);
+}
+
+.admin-header {
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.admin-header h1 {
+  font-size: 1.3rem;
+  margin-top: 4px;
+}
+
+.admin-header__acciones {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.admin-link {
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: rgba(255,255,255,0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.admin-link--btn {
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+.admin-tabs {
+  display: flex;
+  background: white;
+  border-bottom: 1px solid var(--color-borde);
+  padding: 0 12px;
+}
+
+.admin-tab {
+  flex: 1;
+  padding: 14px 8px;
+  border: none;
+  background: none;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.admin-tab.activa {
+  color: var(--color-primario);
+  border-bottom-color: var(--color-primario);
+}
+
+.admin-seccion {
+  padding: 20px;
+}
+
+.admin-seccion[hidden] {
+  display: none;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radio);
+  padding: 18px 16px;
+  border: 1px solid var(--color-borde);
+  box-shadow: var(--sombra-sm);
+}
+
+.stat-card__valor {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-primario);
+}
+
+.stat-card__label {
+  font-size: 0.8rem;
+  color: var(--color-texto-suave);
+  margin-top: 4px;
+}
+
+.stat-card--destacada {
+  border-color: var(--color-primario);
+  background: linear-gradient(135deg, #f0f9fa 0%, #e8f4f6 100%);
+}
+
+/* Toolbar */
+.admin-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-select {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  background: white;
+}
+
+/* Lista productos admin */
+.productos-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prod-admin-card {
+  display: flex;
+  gap: 14px;
+  background: white;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 12px;
+  align-items: center;
+}
+
+.prod-admin-card.agotado {
+  opacity: 0.65;
+}
+
+.prod-admin-card__img {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radio-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--color-borde);
+}
+
+.prod-admin-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.prod-admin-card__nombre {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.prod-admin-card__meta {
+  font-size: 0.8rem;
+  color: var(--color-texto-suave);
+  margin-top: 2px;
+}
+
+.prod-admin-card__precio {
+  font-weight: 700;
+  color: var(--color-acento);
+  font-size: 1rem;
+  margin-top: 4px;
+}
+
+.prod-admin-card__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-mini {
+  padding: 7px 12px;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-mini--editar { background: var(--color-fondo); color: var(--color-primario); border: 1px solid var(--color-borde); }
+.btn-mini--agotado { background: #fff7ed; color: #c2410c; }
+.btn-mini--borrar { background: #fef2f2; color: #b91c1c; }
+
+/* Forms */
+.form-admin label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--color-texto);
+}
+
+.form-admin input,
+.form-admin textarea,
+.form-admin select {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 11px 13px;
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--font);
+  font-size: 0.95rem;
+}
+
+.form-admin input:focus,
+.form-admin textarea:focus,
+.form-admin select:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+.alergenos-fieldset {
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.alergenos-fieldset legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0 4px;
+}
+
+.alergenos-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 8px;
+}
+
+.alergenos-checks label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  margin: 0;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row !important;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  width: auto;
+  margin: 0;
+}
+
+#modal-producto .modal__body {
+  padding: 16px 20px 24px;
+}
+
+/* Ventas hoy */
+.ventas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.ventas-fecha {
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+}
+
+.ventas-subtitulo {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  margin-bottom: 12px;
+}
+
+.ventas-subtitulo--sep {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-borde);
+}
+
+.ventas-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.venta-producto-fila {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  background: white;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  padding: 12px 14px;
+}
+
+.venta-producto-fila__nombre {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.venta-producto-fila__cantidad {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-primario);
+  text-align: center;
+  min-width: 48px;
+}
+
+.venta-producto-fila__cantidad small {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+  text-transform: uppercase;
+}
+
+.venta-producto-fila__total {
+  font-weight: 700;
+  color: var(--color-acento);
+  text-align: right;
+  min-width: 70px;
+}
+
+.ventas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.venta-registro {
+  background: white;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 14px 16px;
+  box-shadow: var(--sombra-sm);
+}
+
+.venta-registro__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.venta-registro__mesa {
+  font-weight: 700;
+  color: var(--color-primario);
+  font-size: 0.95rem;
+}
+
+.venta-registro__hora {
+  font-size: 0.8rem;
+  color: var(--color-texto-suave);
+}
+
+.venta-registro__total {
+  font-weight: 700;
+  color: var(--color-acento);
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.venta-registro__linea {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  padding: 3px 0;
+  color: var(--color-texto);
+}
+
+.venta-registro__linea span:last-child {
+  color: var(--color-texto-suave);
+}
+
+.venta-estado {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+.venta-estado.pendiente { background: #fef3c7; color: #92400e; }
+.venta-estado.servido { background: #dbeafe; color: #1e40af; }
+.venta-estado.pagado { background: #d1fae5; color: #166534; }
+
+.ventas-vacio {
+  text-align: center;
+  color: var(--color-texto-suave);
+  padding: 48px 20px;
+  line-height: 1.6;
+}

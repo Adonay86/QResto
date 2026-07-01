@@ -1,0 +1,17 @@
+{
+  "name": "qresto-server",
+  "version": "0.1.0",
+  "description": "Servidor QResto - API y archivos estáticos",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "db:init": "node scripts/init-db.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0",
+    "socket.io": "^4.8.1"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "fecha": "2026-07-01",
+  "registros": [
+    {
+      "id": 1,
+      "mesa": 3,
+      "lineas": [
+        {
+          "id": 1,
+          "nombre": "Papas arrugadas con mojo",
+          "cantidad": 2,
+          "precio": 5.5
+        }
+      ],
+      "total": 11,
+      "estado": "pagado",
+      "creadoEn": "2026-07-01T19:57:10.971Z",
+      "pagadoEn": "2026-07-01T19:57:29.429Z"
+    },
+    {
+      "id": 2,
+      "mesa": 3,
+      "lineas": [
+        {
+          "id": 1,
+          "nombre": "Papas arrugadas con mojo",
+          "cantidad": 2,
+          "precio": 5.5
+        }
+      ],
+      "total": 11,
+      "estado": "pagado",
+      "creadoEn": "2026-07-01T20:02:39.858Z",
+      "pagadoEn": "2026-07-01T20:03:26.186Z"
+    }
+  ]
+}
