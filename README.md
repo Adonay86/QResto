@@ -3,6 +3,8 @@
 **Carta digital con pedido desde la mesa** para bares y restaurantes.  
 Proyecto full-stack desarrollado en Las Palmas de Gran Canaria.
 
+**GitHub:** https://github.com/Adonay86/QResto
+
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)]()
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)]()
 [![MySQL](https://img.shields.io/badge/MySQL-opcional-4479A1?logo=mysql&logoColor=white)]()
