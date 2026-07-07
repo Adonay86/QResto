@@ -1,6 +1,6 @@
-const fs = require("fs");
 const path = require("path");
 const db = require("./db");
+const { leerJson, escribirJson } = require("./fs-utils");
 
 const CARTA_PATH = path.join(__dirname, "data", "carta-demo.json");
 const LOCAL_PATH = path.join(__dirname, "data", "local.json");
@@ -13,18 +13,6 @@ const DEFAULT_LOCAL = {
 
 let cacheCarta = null;
 let cacheLocal = null;
-
-function leerJson(filePath, fallback) {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
-  } catch {
-    return fallback;
-  }
-}
-
-function escribirJson(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
-}
 
 async function cargarDesdeMysql() {
   const categorias = await db.query(

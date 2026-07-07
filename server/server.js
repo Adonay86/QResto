@@ -81,7 +81,7 @@ app.post("/api/mesas/:mesa/liberar", (req, res) => {
   res.json(resultado);
 });
 
-app.post("/api/demo/reset", (req, res) => {
+app.post("/api/demo/reset", auth.middleware, (req, res) => {
   store.resetDemo();
   emitirEstado();
   res.json({ ok: true });
@@ -159,8 +159,12 @@ async function arrancar() {
     console.log(`  Carta cliente:  http://localhost:${PORT}/?mesa=3`);
     console.log(`  Panel camarero: http://localhost:${PORT}/camarero.html`);
     console.log(`  Panel admin:    http://localhost:${PORT}/admin.html`);
-    console.log(`  Admin clave:    qresto2026`);
-    console.log(`  Datos:          ${db.enabled() ? "MySQL" : "JSON (archivos locales)"}\n`);
+    console.log(`  Datos:          ${db.enabled() ? "MySQL" : "JSON (archivos locales)"}`);
+    if (!process.env.QRESTO_ADMIN_PASSWORD) {
+      console.log(`  Aviso:          usando contraseña admin de demo (cambia QRESTO_ADMIN_PASSWORD en .env)\n`);
+    } else {
+      console.log("");
+    }
   });
 }
 

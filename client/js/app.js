@@ -1,4 +1,7 @@
 import { ALERGENOS_LABEL, formatoPrecio } from "./utils.js";
+import { IMAGEN_FALLBACK } from "./constants.js";
+import { $, crearToast } from "./dom.js";
+import { enviarPedido, llamarCamarero, obtenerPedidosMesa } from "./api.js";
 import {
   anadirProducto,
   cambiarCantidad,
@@ -7,19 +10,15 @@ import {
   getTotal,
   vaciarCarrito,
 } from "./carrito.js";
-import { enviarPedido, llamarCamarero, obtenerPedidosMesa } from "./api.js";
 
 const params = new URLSearchParams(window.location.search);
 const mesa = params.get("mesa") || "1";
-
-const IMAGEN_FALLBACK =
-  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=450&fit=crop&q=80";
 
 let carta = { categorias: [], productos: [] };
 let categoriaActiva = null;
 let pedidosActivos = [];
 
-const $ = (sel) => document.querySelector(sel);
+const toast = crearToast("#toast", 2200);
 
 async function cargarDatos() {
   const [localRes, cartaRes] = await Promise.all([
@@ -131,7 +130,7 @@ function renderProductos() {
       if (producto && !producto.agotado) {
         anadirProducto(producto);
         actualizarCarritoUI();
-        mostrarToast(`✓ ${producto.nombre} añadido`);
+        toast(`✓ ${producto.nombre} añadido`);
       }
     });
   });
@@ -237,13 +236,7 @@ function cerrarModal(id) {
 }
 
 function mostrarToast(msg) {
-  const toast = $("#toast");
-  toast.textContent = msg;
-  toast.hidden = false;
-  clearTimeout(mostrarToast._timer);
-  mostrarToast._timer = setTimeout(() => {
-    toast.hidden = true;
-  }, 2200);
+  toast(msg);
 }
 
 $("#btn-carrito").addEventListener("click", () => {

@@ -1,6 +1,6 @@
-const fs = require("fs");
 const path = require("path");
 const db = require("./db");
+const { leerJson: leerJsonFile, escribirJson } = require("./fs-utils");
 
 const VENTAS_PATH = path.join(__dirname, "data", "ventas-hoy.json");
 
@@ -8,27 +8,18 @@ function fechaHoy() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function horaLocal(iso) {
-  const d = new Date(iso);
-  return d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
-}
-
-function leerJson() {
+function leerVentas() {
   const hoy = fechaHoy();
-  try {
-    const data = JSON.parse(fs.readFileSync(VENTAS_PATH, "utf8"));
-    if (data.fecha !== hoy) return { fecha: hoy, registros: [] };
-    return data;
-  } catch {
-    return { fecha: hoy, registros: [] };
-  }
+  const data = leerJsonFile(VENTAS_PATH, { fecha: hoy, registros: [] });
+  if (data.fecha !== hoy) return { fecha: hoy, registros: [] };
+  return data;
 }
 
 function guardarJson(data) {
-  fs.writeFileSync(VENTAS_PATH, JSON.stringify(data, null, 2), "utf8");
+  escribirJson(VENTAS_PATH, data);
 }
 
-let data = leerJson();
+let data = leerVentas();
 
 async function cargarDesdeMysql() {
   const hoy = fechaHoy();
@@ -221,11 +212,6 @@ function getResumenProductos() {
     .sort((a, b) => b.cantidad - a.cantidad);
 }
 
-function limpiarHoy() {
-  data = { fecha: fechaHoy(), registros: [] };
-  if (!db.enabled()) guardarJson(data);
-}
-
 module.exports = {
   init,
   registrarPedido,
@@ -234,6 +220,4 @@ module.exports = {
   getRegistros,
   getResumen,
   getResumenProductos,
-  limpiarHoy,
-  horaLocal,
 };

@@ -1,8 +1,20 @@
 {
   "categorias": [
-    { "id": "entrantes", "nombre": "Entrantes", "icono": "🥗" },
-    { "id": "comidas", "nombre": "Comidas", "icono": "🍽️" },
-    { "id": "bebidas", "nombre": "Bebidas", "icono": "🍺" }
+    {
+      "id": "entrantes",
+      "nombre": "Entrantes",
+      "icono": "🥗"
+    },
+    {
+      "id": "comidas",
+      "nombre": "Comidas",
+      "icono": "🍽️"
+    },
+    {
+      "id": "bebidas",
+      "nombre": "Bebidas",
+      "icono": "🍺"
+    }
   ],
   "productos": [
     {
@@ -20,8 +32,10 @@
       "categoria": "entrantes",
       "nombre": "Queso asado con miel",
       "descripcion": "Queso semicurado de cabra con miel de palma.",
-      "precio": 8.0,
-      "alergenos": ["lacteos"],
+      "precio": 8,
+      "alergenos": [
+        "lacteos"
+      ],
       "agotado": false,
       "imagen": "https://images.unsplash.com/photo-1452195100486-9c89d7041f08?w=600&h=450&fit=crop&q=80"
     },
@@ -31,7 +45,11 @@
       "nombre": "Croquetas de jamón",
       "descripcion": "6 unidades, receta casera.",
       "precio": 7.5,
-      "alergenos": ["gluten", "lacteos", "huevo"],
+      "alergenos": [
+        "gluten",
+        "lacteos",
+        "huevo"
+      ],
       "agotado": false,
       "imagen": "https://images.unsplash.com/photo-1600891964595-f61ba0e8f216?w=600&h=450&fit=crop&q=80"
     },
@@ -41,7 +59,9 @@
       "nombre": "Pescado del día",
       "descripcion": "Pescado fresco de lonja, papas y ensalada.",
       "precio": 14.5,
-      "alergenos": ["pescado"],
+      "alergenos": [
+        "pescado"
+      ],
       "agotado": false,
       "imagen": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&h=450&fit=crop&q=80"
     },
@@ -50,7 +70,7 @@
       "categoria": "comidas",
       "nombre": "Pollo al ajillo",
       "descripcion": "Con patatas panaderas y pimientos.",
-      "precio": 11.0,
+      "precio": 11,
       "alergenos": [],
       "agotado": false,
       "imagen": "https://images.unsplash.com/photo-1598103442097-257294eff650?w=600&h=450&fit=crop&q=80"
@@ -60,8 +80,11 @@
       "categoria": "comidas",
       "nombre": "Paella mixta (2 pax)",
       "descripcion": "Arroz con marisco y pollo. Mínimo 2 personas.",
-      "precio": 24.0,
-      "alergenos": ["crustaceos", "moluscos"],
+      "precio": 24,
+      "alergenos": [
+        "crustaceos",
+        "moluscos"
+      ],
       "agotado": true,
       "imagen": "https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&h=450&fit=crop&q=80"
     },
@@ -70,8 +93,10 @@
       "categoria": "bebidas",
       "nombre": "Cerveza local (caña)",
       "descripcion": "Tropical o Dorada.",
-      "precio": 2.0,
-      "alergenos": ["gluten"],
+      "precio": 2,
+      "alergenos": [
+        "gluten"
+      ],
       "agotado": false,
       "imagen": "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&h=450&fit=crop&q=80"
     },
@@ -81,7 +106,9 @@
       "nombre": "Vino blanco copa",
       "descripcion": "Listán blanco de Lanzarote.",
       "precio": 3.5,
-      "alergenos": ["sulfitos"],
+      "alergenos": [
+        "sulfitos"
+      ],
       "agotado": false,
       "imagen": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=450&fit=crop&q=80"
     },
@@ -104,6 +131,16 @@
       "alergenos": [],
       "agotado": false,
       "imagen": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&h=450&fit=crop&q=80"
+    },
+    {
+      "id": 11,
+      "categoria": "bebidas",
+      "nombre": "cocacola",
+      "descripcion": "cocacola normal",
+      "precio": 2,
+      "alergenos": [],
+      "agotado": true,
+      "imagen": ""
     }
   ]
 }

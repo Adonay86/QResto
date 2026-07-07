@@ -731,6 +731,96 @@ body {
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
+/* ── Componentes panel (admin + camarero) ── */
+[hidden] {
+  display: none !important;
+}
+
+.btn-panel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: var(--radio-sm);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-panel--primario {
+  background: var(--color-primario);
+  color: white;
+}
+
+.btn-panel--primario:hover {
+  background: var(--color-primario-claro);
+}
+
+.btn-panel--primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-panel--secundario {
+  background: var(--color-fondo);
+  color: var(--color-primario);
+  border: 2px solid var(--color-primario);
+}
+
+.btn-panel--exito {
+  background: var(--color-exito);
+  color: white;
+}
+
+.btn-panel--peligro {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.btn-panel--compact {
+  width: auto;
+  padding: 8px 16px;
+}
+
+.btn-panel--spaced {
+  margin-top: 10px;
+}
+
+.estado-tag,
+.venta-estado {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.estado-tag.pendiente,
+.venta-estado.pendiente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.estado-tag.servido {
+  background: #d1fae5;
+  color: #166534;
+}
+
+.venta-estado.servido {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.venta-estado.pagado {
+  background: #d1fae5;
+  color: #166534;
+}
+
 /* ── Desktop ── */
 @media (min-width: 561px) {
   body {

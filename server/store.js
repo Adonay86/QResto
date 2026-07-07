@@ -1,6 +1,6 @@
 /**
- * Estado en memoria del local (MVP).
- * Más adelante pasará a base de datos.
+ * Estado en memoria del local (mesas y pedidos activos).
+ * Carta, local y ventas del día persisten en JSON o MySQL.
  */
 
 const ventas = require("./ventas");
@@ -21,10 +21,6 @@ function crearEstadoInicial() {
 }
 
 let state = crearEstadoInicial();
-
-function getEstado() {
-  return state;
-}
 
 function getEstadoPublico() {
   return {
@@ -153,7 +149,6 @@ function getHistorialVentas() {
 }
 
 module.exports = {
-  getEstado,
   getEstadoPublico,
   getResumenDia,
   getHistorialVentas,

@@ -1,12 +1,8 @@
-# Subir QResto a GitHub
+# Git y despliegue
 
 Repositorio: **https://github.com/Adonay86/QResto**
 
-## Estado
-
-El código ya está subido en la rama `main`.
-
-## Si haces cambios y quieres actualizar GitHub
+## Subir cambios
 
 ```powershell
 cd C:\Users\adona\Projects\QResto
@@ -15,8 +11,6 @@ cd C:\Users\adona\Projects\QResto
 & "C:\Program Files\Git\bin\git.exe" push
 ```
 
-## Remote configurado
+Remote SSH: `git@github.com:Adonay86/QResto.git`
 
-```
-https://github.com/Adonay86/QResto.git
-```
+Ver también: [configurar-ssh-github.md](./configurar-ssh-github.md)

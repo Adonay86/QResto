@@ -1,26 +1,27 @@
-import { formatoPrecio } from "./utils.js";
+import { formatoPrecio, etiquetaEstadoMesa, etiquetaEstadoPedido } from "./utils.js";
+import { SOCKET_EVENT } from "./constants.js";
+import { $, crearToast } from "./dom.js";
+import { apiPost, obtenerLocal } from "./api.js";
 
 let estado = { mesas: [] };
 let mesaSeleccionada = null;
 
-const $ = (sel) => document.querySelector(sel);
-
+const toast = crearToast("#toast-camarero");
 const socket = io();
 
-socket.on("estado:actualizado", (data) => {
+socket.on(SOCKET_EVENT, (data) => {
   estado = data;
   render();
 });
 
 async function cargarInicial() {
-  const res = await fetch("/api/estado");
-  estado = await res.json();
+  const [estadoData, local] = await Promise.all([
+    fetch("/api/estado").then((r) => r.json()),
+    obtenerLocal().catch(() => ({ nombre: "Mi local" })),
+  ]);
+  estado = estadoData;
+  $("#local-nombre").textContent = local.nombre || "Mi local";
   render();
-}
-
-function etiquetaEstado(estado) {
-  const map = { libre: "Libre", ocupada: "Ocupada", atencion: "Llama" };
-  return map[estado] || estado;
 }
 
 function render() {
@@ -45,7 +46,7 @@ function renderAlertas() {
       (m) => `
     <div class="alerta-item">
       <span><strong>Mesa ${m.numero}</strong> pide atención</span>
-      <button type="button" class="btn-panel btn-panel--primario" data-atender="${m.numero}" style="width:auto;padding:8px 16px;">
+      <button type="button" class="btn-panel btn-panel--primario btn-panel--compact" data-atender="${m.numero}">
         Atender
       </button>
     </div>`
@@ -65,7 +66,7 @@ function renderMesas() {
       return `
       <button type="button" class="mesa-card ${m.estado}" data-mesa="${m.numero}">
         <div class="mesa-card__num">${m.numero}</div>
-        <div class="mesa-card__estado">${etiquetaEstado(m.estado)}</div>
+        <div class="mesa-card__estado">${etiquetaEstadoMesa(m.estado)}</div>
         ${pendientes > 0 ? `<span class="mesa-card__badge">${pendientes} pedido${pendientes > 1 ? "s" : ""}</span>` : ""}
         ${m.llamadaActiva ? '<span class="mesa-card__badge">🔔</span>' : ""}
       </button>`;
@@ -94,7 +95,7 @@ function renderDetalleMesa(numero) {
   const mesa = estado.mesas.find((m) => String(m.numero) === String(numero));
   if (!mesa) return;
 
-  $("#mesa-detalle-titulo").textContent = `Mesa ${mesa.numero} — ${etiquetaEstado(mesa.estado)}`;
+  $("#mesa-detalle-titulo").textContent = `Mesa ${mesa.numero} — ${etiquetaEstadoMesa(mesa.estado)}`;
 
   const body = $("#mesa-detalle-body");
   const pedidosActivos = mesa.pedidos.filter((p) => p.estado !== "pagado");
@@ -108,7 +109,7 @@ function renderDetalleMesa(numero) {
       <div class="pedido-detalle">
         <div class="pedido-detalle__head">
           <span>Pedido #${p.id}</span>
-          <span class="estado-tag ${p.estado}">${p.estado}</span>
+          <span class="estado-tag ${p.estado}">${etiquetaEstadoPedido(p.estado)}</span>
         </div>
         ${p.lineas
           .map(
@@ -119,13 +120,13 @@ function renderDetalleMesa(numero) {
           </div>`
           )
           .join("")}
-        <div class="pedido-detalle__linea" style="font-weight:700;margin-top:8px;padding-top:8px;border-top:1px solid #eee;">
+        <div class="pedido-detalle__linea pedido-detalle__total">
           <span>Total</span>
           <span>${formatoPrecio(p.total)}</span>
         </div>
         ${
           p.estado === "pendiente"
-            ? `<button type="button" class="btn-panel btn-panel--exito" style="margin-top:10px;" data-servido="${p.id}">Marcar servido</button>`
+            ? `<button type="button" class="btn-panel btn-panel--exito btn-panel--spaced" data-servido="${p.id}">Marcar servido</button>`
             : ""
         }
       </div>`
@@ -157,13 +158,6 @@ function renderDetalleMesa(numero) {
   $("#btn-atender-llamada")?.addEventListener("click", () => atenderLlamada(numero));
   $("#btn-pagado")?.addEventListener("click", () => marcarPagado(numero));
   $("#btn-liberar")?.addEventListener("click", () => liberarMesa(numero));
-}
-
-async function apiPost(url) {
-  const res = await fetch(url, { method: "POST" });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error);
-  return data;
 }
 
 async function atenderLlamada(mesa) {
@@ -202,14 +196,6 @@ async function liberarMesa(mesa) {
   } catch {
     toast("Error al liberar mesa");
   }
-}
-
-function toast(msg) {
-  const t = $("#toast-camarero");
-  t.textContent = msg;
-  t.hidden = false;
-  clearTimeout(toast._t);
-  toast._t = setTimeout(() => (t.hidden = true), 2500);
 }
 
 document.querySelectorAll("[data-cerrar-mesa]").forEach((el) => {

@@ -1,6 +1,8 @@
-import { ALERGENOS_LABEL, formatoPrecio } from "./utils.js";
+import { ALERGENOS_LABEL, formatoPrecio, formatearHora, etiquetaEstadoPedido } from "./utils.js";
+import { TOKEN_KEY, SOCKET_EVENT, IMAGEN_FALLBACK } from "./constants.js";
+import { $, crearToast } from "./dom.js";
+import { crearApiAdmin } from "./api.js";
 
-const TOKEN_KEY = "qresto_admin_token";
 const ALERGENOS_LISTA = Object.keys(ALERGENOS_LABEL);
 
 let token = localStorage.getItem(TOKEN_KEY);
@@ -8,50 +10,19 @@ let carta = { categorias: [], productos: [] };
 let resumen = null;
 let socket = null;
 
+const toast = crearToast("#toast-admin");
+const api = crearApiAdmin(() => token, logout);
+
 function conectarTiempoReal() {
   if (socket) return;
   socket = io();
-  socket.on("estado:actualizado", () => {
+  socket.on(SOCKET_EVENT, () => {
     actualizarResumen();
     actualizarVentas();
   });
 }
 
-function formatearHora(iso) {
-  const d = new Date(iso);
-  return d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
-}
-
-function etiquetaEstadoVenta(estado) {
-  const map = { pendiente: "Pendiente", servido: "Servido", pagado: "Cobrado" };
-  return map[estado] || estado;
-}
-
-const $ = (sel) => document.querySelector(sel);
-
-function toast(msg) {
-  const t = $("#toast-admin");
-  t.textContent = msg;
-  t.hidden = false;
-  clearTimeout(toast._t);
-  toast._t = setTimeout(() => (t.hidden = true), 2500);
-}
-
-async function api(url, options = {}) {
-  const headers = {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...options.headers,
-  };
-  const res = await fetch(url, { ...options, headers });
-  const data = await res.json().catch(() => ({}));
-  if (res.status === 401 && !url.includes("/admin/login")) {
-    logout();
-    throw new Error("Sesión expirada");
-  }
-  if (!res.ok) throw new Error(data.error || "Error en la petición");
-  return data;
-}
+const etiquetaEstadoVenta = etiquetaEstadoPedido;
 
 function logout() {
   token = null;
@@ -96,7 +67,7 @@ $("#login-form").addEventListener("submit", async (e) => {
 
     if (!res.ok) {
       if (res.status === 401) {
-        err.textContent = "Contraseña incorrecta. Usa: qresto2026";
+        err.textContent = "Contraseña incorrecta";
       } else {
         err.textContent = data.error || "No se pudo entrar";
       }
@@ -332,7 +303,7 @@ function renderProductosAdmin() {
       return `
       <article class="prod-admin-card ${p.agotado ? "agotado" : ""}">
         <img class="prod-admin-card__img" src="${p.imagen || ""}" alt=""
-          onerror="this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200&h=200&fit=crop'">
+          onerror="this.src='${IMAGEN_FALLBACK}'">
         <div class="prod-admin-card__info">
           <div class="prod-admin-card__nombre">${p.nombre}</div>
           <div class="prod-admin-card__meta">${cat?.nombre || p.categoria} ${p.agotado ? "· Agotado" : ""}</div>

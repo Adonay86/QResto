@@ -3,40 +3,6 @@
   min-height: 100vh;
 }
 
-/* Fix: display:flex en .login-pantalla anulaba el atributo hidden */
-[hidden] {
-  display: none !important;
-}
-
-.btn-panel {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 14px 16px;
-  border: none;
-  border-radius: var(--radio-sm);
-  font-family: var(--font);
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-panel--primario {
-  background: var(--color-primario);
-  color: white;
-}
-
-.btn-panel--primario:hover {
-  background: var(--color-primario-claro);
-}
-
-.btn-panel--primario:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 /* Login */
 .login-pantalla {
   min-height: 100vh;
@@ -560,10 +526,6 @@
   letter-spacing: 0.04em;
   margin-top: 4px;
 }
-
-.venta-estado.pendiente { background: #fef3c7; color: #92400e; }
-.venta-estado.servido { background: #dbeafe; color: #1e40af; }
-.venta-estado.pagado { background: #d1fae5; color: #166534; }
 
 .ventas-vacio {
   text-align: center;
