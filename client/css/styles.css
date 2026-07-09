@@ -29,7 +29,7 @@
 
 body {
   font-family: var(--font);
-  background: var(--color-fondo);
+  background: linear-gradient(180deg, #e8ece9 0%, var(--color-fondo) 120px);
   color: var(--color-texto);
   line-height: 1.5;
   -webkit-tap-highlight-color: transparent;
@@ -44,6 +44,8 @@ body {
   width: 100%;
   max-width: var(--app-ancho);
   margin: 0 auto;
+  background: var(--color-fondo);
+  box-shadow: var(--sombra-lg);
 }
 
 /* ── Hero ── */

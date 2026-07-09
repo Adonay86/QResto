@@ -1,10 +1,13 @@
 import { formatoPrecio, etiquetaEstadoMesa, etiquetaEstadoPedido } from "./utils.js";
 import { SOCKET_EVENT } from "./constants.js";
 import { $, crearToast } from "./dom.js";
-import { apiPost, obtenerLocal } from "./api.js";
+import { obtenerLocal } from "./api.js";
+
+const CAMARERO_TOKEN_KEY = "qresto_camarero_token";
 
 let estado = { mesas: [] };
 let mesaSeleccionada = null;
+let tokenCamarero = localStorage.getItem(CAMARERO_TOKEN_KEY);
 
 const toast = crearToast("#toast-camarero");
 const socket = io();
@@ -22,6 +25,49 @@ async function cargarInicial() {
   estado = estadoData;
   $("#local-nombre").textContent = local.nombre || "Mi local";
   render();
+}
+
+function logoutCamarero() {
+  tokenCamarero = null;
+  localStorage.removeItem(CAMARERO_TOKEN_KEY);
+  $("#usuario-camarero").value = "";
+  $("#password-camarero").value = "";
+  $("#login-error-camarero").hidden = true;
+  $("#app-camarero").hidden = true;
+  $("#login-pantalla-camarero").hidden = false;
+}
+
+function mostrarPanelCamarero() {
+  $("#login-pantalla-camarero").hidden = true;
+  $("#app-camarero").hidden = false;
+}
+
+async function loginCamarero(usuario, password) {
+  const res = await fetch("/api/camarero/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ usuario, password }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "No se pudo entrar");
+  tokenCamarero = data.token;
+  localStorage.setItem(CAMARERO_TOKEN_KEY, tokenCamarero);
+}
+
+async function apiPostCamarero(url) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${tokenCamarero}`,
+    },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401 || res.status === 403) {
+    logoutCamarero();
+    throw new Error("Sesión de camarero expirada");
+  }
+  if (!res.ok) throw new Error(data.error || "Error en la petición");
+  return data;
 }
 
 function render() {
@@ -162,39 +208,39 @@ function renderDetalleMesa(numero) {
 
 async function atenderLlamada(mesa) {
   try {
-    await apiPost(`/api/mesas/${mesa}/atender-llamada`);
+    await apiPostCamarero(`/api/mesas/${mesa}/atender-llamada`);
     toast(`Llamada mesa ${mesa} atendida`);
-  } catch {
-    toast("Error al atender llamada");
+  } catch (err) {
+    toast(err.message || "Error al atender llamada");
   }
 }
 
 async function marcarServido(mesa, pedidoId) {
   try {
-    await apiPost(`/api/mesas/${mesa}/pedidos/${pedidoId}/servido`);
+    await apiPostCamarero(`/api/mesas/${mesa}/pedidos/${pedidoId}/servido`);
     toast(`Pedido #${pedidoId} servido`);
-  } catch {
-    toast("Error al marcar servido");
+  } catch (err) {
+    toast(err.message || "Error al marcar servido");
   }
 }
 
 async function marcarPagado(mesa) {
   try {
-    await apiPost(`/api/mesas/${mesa}/pagado`);
+    await apiPostCamarero(`/api/mesas/${mesa}/pagado`);
     toast(`Mesa ${mesa} pagada`);
-  } catch {
-    toast("Error al marcar pagado");
+  } catch (err) {
+    toast(err.message || "Error al marcar pagado");
   }
 }
 
 async function liberarMesa(mesa) {
   if (!confirm(`¿Liberar mesa ${mesa}? Se borrarán los pedidos de la sesión.`)) return;
   try {
-    await apiPost(`/api/mesas/${mesa}/liberar`);
+    await apiPostCamarero(`/api/mesas/${mesa}/liberar`);
     cerrarMesa();
     toast(`Mesa ${mesa} libre`);
-  } catch {
-    toast("Error al liberar mesa");
+  } catch (err) {
+    toast(err.message || "Error al liberar mesa");
   }
 }
 
@@ -202,4 +248,37 @@ document.querySelectorAll("[data-cerrar-mesa]").forEach((el) => {
   el.addEventListener("click", cerrarMesa);
 });
 
-cargarInicial();
+$("#btn-logout-camarero").addEventListener("click", () => {
+  logoutCamarero();
+  toast("Sesión cerrada");
+});
+
+$("#login-form-camarero").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = $("#login-error-camarero");
+  const btn = $("#btn-login-camarero");
+  err.hidden = true;
+  btn.disabled = true;
+  btn.textContent = "Entrando...";
+  try {
+    await loginCamarero(
+      $("#usuario-camarero").value.trim(),
+      $("#password-camarero").value.trim()
+    );
+    mostrarPanelCamarero();
+    await cargarInicial();
+  } catch (error) {
+    err.textContent = error.message || "No se pudo entrar";
+    err.hidden = false;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Entrar";
+  }
+});
+
+if (tokenCamarero) {
+  mostrarPanelCamarero();
+  cargarInicial().catch(() => {
+    logoutCamarero();
+  });
+}

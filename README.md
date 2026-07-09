@@ -1,25 +1,44 @@
 # QResto
 
-SaaS para **bares y restaurantes**: carta digital por QR, pedidos en tiempo real y panel de administración.
+SaaS para **bares y restaurantes** en Canarias: carta digital por QR, pedidos en tiempo real y panel de administración.
 
+**Demo local:** `npm start` → http://localhost:3000  
 **Repositorio:** https://github.com/Adonay86/QResto
 
 ---
 
-## Vista general
+## Capturas
 
-| Pantalla | Quién la usa | Qué hace |
-|----------|--------------|----------|
-| **Carta** (`/?mesa=N`) | Cliente | Ve menú, pide, llama al camarero |
-| **Camarero** | Sala | Mesas en vivo, pedidos, cobros |
-| **Admin** | Dueño | Edita carta, local y ventas del día |
+### Carta del cliente (móvil)
+El cliente escanea el QR de su mesa y pide desde el móvil.
+
+![Carta cliente](docs/screenshots/carta-cliente.png)
+
+### Panel camarero
+Mesas en vivo, pedidos y cobros con Socket.io.
+
+![Panel camarero](docs/screenshots/panel-camarero.png)
+
+### Panel admin
+Resumen del día, ventas, carta editable y códigos QR por mesa.
+
+![Panel admin](docs/screenshots/panel-admin.png)
+
+![Mesas QR](docs/screenshots/mesas-qr.png)
+
+---
+
+## Qué hace
+
+| Pantalla | Usuario | Función |
+|----------|---------|---------|
+| **Carta** `/?mesa=N` | Cliente | Menú, carrito, pedido, llamar camarero |
+| **Camarero** | Sala | Mesas en tiempo real, servir y cobrar |
+| **Admin** | Dueño | Carta, local, ventas, **QR por mesa** |
 
 ## Stack
 
-- **Frontend:** HTML, CSS, JavaScript (ES modules), Tailwind CSS
-- **Backend:** Node.js, Express, REST API
-- **Tiempo real:** Socket.io
-- **Datos:** MySQL (opcional) o JSON local
+JavaScript · Node.js · Express · Socket.io · MySQL (opcional) · Tailwind CSS
 
 ## Arranque rápido
 
@@ -33,48 +52,29 @@ cd ../server && npm start
 |-----|-------------|
 | http://localhost:3000/?mesa=3 | Carta cliente |
 | http://localhost:3000/camarero.html | Panel camarero |
-| http://localhost:3000/admin.html | Panel admin |
+| http://localhost:3000/admin.html | Panel admin (contraseña en `.env`) |
 
 ## Variables de entorno
 
 Copia `server/.env.example` → `server/.env`:
 
-| Variable | Descripción | Por defecto |
-|----------|-------------|-------------|
-| `PORT` | Puerto del servidor | `3000` |
-| `QRESTO_ADMIN_PASSWORD` | Clave panel admin | `qresto2026` |
-| `MYSQL_*` | Conexión MySQL | ver `.env.example` |
-| `MYSQL_DISABLED` | `1` = solo JSON | — |
+| Variable | Descripción |
+|----------|-------------|
+| `PORT` | Puerto del servidor (3000) |
+| `QRESTO_ADMIN_PASSWORD` | Clave panel admin |
+| `QRESTO_CAMARERO_PASSWORD` | Clave panel camarero |
+| `QRESTO_BASE_URL` | URL pública para QR en producción |
+| `MYSQL_*` | MySQL opcional |
 
-> **Demo / portfolio:** cambia `QRESTO_ADMIN_PASSWORD` antes de exponer el servidor a internet.
-
-## MySQL (opcional)
-
-```bash
-cd server
-npm run db:init
-npm start
-```
-
-Si MySQL no está disponible, la app usa `server/data/*.json` automáticamente.
-
-## Estructura del proyecto
+## Estructura
 
 ```
 QResto/
-├── client/           # Frontend (3 pantallas)
-│   ├── js/
-│   │   ├── api.js        # Cliente HTTP unificado
-│   │   ├── constants.js  # Constantes compartidas
-│   │   ├── dom.js        # Utilidades DOM
-│   │   └── utils.js      # Formato, etiquetas de estado
-│   └── css/
-├── server/           # API + Socket.io
-│   ├── server.js
-│   ├── store.js      # Mesas y pedidos activos (memoria)
-│   ├── carta.js      # Carta y local (JSON/MySQL)
-│   └── ventas.js     # Historial de ventas del día
-└── docs/             # Planificación de producto
+├── client/              # 3 pantallas web
+├── server/              # API REST + Socket.io
+├── docs/                # Planificación + capturas
+│   └── screenshots/
+└── README.md
 ```
 
 ## API principal
@@ -82,20 +82,22 @@ QResto/
 | Método | Ruta | Auth |
 |--------|------|------|
 | GET | `/api/carta` | — |
-| GET | `/api/local` | — |
 | POST | `/api/pedidos` | — |
-| POST | `/api/llamar` | — |
 | GET | `/api/estado` | — |
-| POST | `/api/admin/login` | — |
-| GET | `/api/admin/carta` | Admin |
+| POST | `/api/camarero/login` | — |
+| GET | `/api/admin/mesas-qr` | Admin |
 | GET | `/api/admin/ventas-hoy` | Admin |
+| GET | `/api/admin/camareros` | Admin |
+| POST | `/api/admin/camareros` | Admin |
+| PUT | `/api/admin/camareros/:id` | Admin |
+| DELETE | `/api/admin/camareros/:id` | Admin |
 
 Evento Socket.io: `estado:actualizado`
 
 ## Autor
 
 **Carlos Adonay Gómez González** — Desarrollador web · Las Palmas de Gran Canaria  
-📧 Adonaygomez27@gmail.com · [GitHub](https://github.com/Adonay86)
+📧 Adonaygomez27@gmail.com · [GitHub](https://github.com/Adonay86/QResto)
 
 ## Licencia
 

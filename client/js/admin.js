@@ -8,6 +8,8 @@ const ALERGENOS_LISTA = Object.keys(ALERGENOS_LABEL);
 let token = localStorage.getItem(TOKEN_KEY);
 let carta = { categorias: [], productos: [] };
 let resumen = null;
+let camareros = [];
+let camareroEditando = null;
 let socket = null;
 
 const toast = crearToast("#toast-admin");
@@ -19,6 +21,7 @@ function conectarTiempoReal() {
   socket.on(SOCKET_EVENT, () => {
     actualizarResumen();
     actualizarVentas();
+    if (mesasQr && !$("#tab-mesas-qr").hidden) actualizarMesasQr();
   });
 }
 
@@ -108,21 +111,25 @@ document.querySelectorAll(".admin-tab").forEach((tab) => {
     $(`#tab-${tab.dataset.tab}`).hidden = false;
     if (tab.dataset.tab === "resumen") actualizarResumen();
     if (tab.dataset.tab === "ventas") actualizarVentas();
+    if (tab.dataset.tab === "mesas-qr") actualizarMesasQr();
   });
 });
 
 // ── Cargar datos ──
 async function cargarTodo() {
-  const [cartaData, resumenData] = await Promise.all([
+  const [cartaData, resumenData, camarerosData] = await Promise.all([
     api("/api/admin/carta"),
     api("/api/admin/resumen"),
+    api("/api/admin/camareros"),
   ]);
   carta = cartaData;
   resumen = resumenData;
+  camareros = camarerosData.camareros || [];
   renderResumen();
   renderFiltros();
   renderProductosAdmin();
   renderFormLocal();
+  renderCamareros();
   renderAlergenosChecks();
   poblarSelectCategorias();
   await actualizarVentas();
@@ -252,6 +259,122 @@ function renderVentas(data) {
     .join("");
 }
 
+let mesasQr = null;
+
+const qrImagenUrl = (url) =>
+  `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(url)}`;
+
+function etiquetaEstadoMesa(estado) {
+  const map = { libre: "Libre", ocupada: "Ocupada", atencion: "Llama" };
+  return map[estado] || estado;
+}
+
+async function actualizarMesasQr() {
+  try {
+    mesasQr = await api("/api/admin/mesas-qr");
+    renderMesasQr();
+  } catch (err) {
+    toast(err.message);
+  }
+}
+
+function renderMesasQr() {
+  if (!mesasQr) return;
+
+  $("#qr-base-url").innerHTML = `URL base: <code>${mesasQr.baseUrl}</code>`;
+
+  const grid = $("#qr-grid");
+  if (!mesasQr.mesas.length) {
+    grid.innerHTML = `<p class="ventas-vacio">No hay mesas configuradas.</p>`;
+    return;
+  }
+
+  grid.innerHTML = mesasQr.mesas
+    .map(
+      (m) => `
+    <article class="qr-card">
+      <div class="qr-card__mesa">Mesa ${m.numero}</div>
+      <div class="qr-card__estado qr-card__estado--${m.estado}">${etiquetaEstadoMesa(m.estado)}</div>
+      <img class="qr-card__img" src="${qrImagenUrl(m.url)}" alt="QR mesa ${m.numero}" width="120" height="120" loading="lazy">
+      <div class="qr-card__url">${m.url}</div>
+      <div class="qr-card__acciones">
+        <a href="${m.url}" target="_blank" rel="noopener" class="btn-mini btn-mini--editar">Probar carta</a>
+        <button type="button" class="btn-mini btn-mini--agotado" data-descargar-qr="${m.numero}">Descargar QR</button>
+      </div>
+    </article>`
+    )
+    .join("");
+
+  grid.querySelectorAll("[data-descargar-qr]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const mesa = mesasQr.mesas.find(
+        (x) => x.numero === Number(btn.dataset.descargarQr)
+      );
+      if (mesa) descargarQr(mesa.numero, mesa.url);
+    });
+  });
+}
+
+async function descargarQr(numero, url) {
+  try {
+    const res = await fetch(qrImagenUrl(url));
+    if (!res.ok) throw new Error("No se pudo generar el QR");
+    const blob = await res.blob();
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = `qresto-mesa-${numero}.png`;
+    enlace.click();
+    URL.revokeObjectURL(enlace.href);
+    toast(`✓ QR mesa ${numero} descargado`);
+  } catch {
+    toast("Error al descargar el QR");
+  }
+}
+
+function imprimirTodasQr() {
+  if (!mesasQr?.mesas.length) {
+    toast("No hay mesas para imprimir");
+    return;
+  }
+
+  const nombreLocal = mesasQr.local?.nombre || "QResto";
+  const tarjetas = mesasQr.mesas
+    .map(
+      (m) => `
+    <div class="print-card">
+      <p class="print-local">${nombreLocal}</p>
+      <p class="print-mesa">Mesa ${m.numero}</p>
+      <img src="${qrImagenUrl(m.url)}" width="180" height="180" alt="QR mesa ${m.numero}">
+      <p class="print-hint">Escanea para ver la carta y pedir</p>
+    </div>`
+    )
+    .join("");
+
+  const ventana = window.open("", "_blank");
+  ventana.document.write(`<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<title>QR Mesas — ${nombreLocal}</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; padding: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .print-card {
+    text-align: center; border: 1px dashed #bbb; border-radius: 8px;
+    padding: 16px; page-break-inside: avoid;
+  }
+  .print-local { font-size: 13px; color: #666; margin: 0 0 4px; }
+  .print-mesa { font-size: 22px; font-weight: bold; margin: 0 0 12px; color: #0c3d47; }
+  .print-hint { font-size: 11px; color: #888; margin: 8px 0 0; }
+</style></head><body>
+<div class="grid">${tarjetas}</div>
+<script>window.onload = function() { window.print(); };<\/script>
+</body></html>`);
+  ventana.document.close();
+}
+
+$("#btn-refrescar-qr").addEventListener("click", actualizarMesasQr);
+$("#btn-imprimir-qr").addEventListener("click", imprimirTodasQr);
+
 $("#btn-refrescar-ventas").addEventListener("click", actualizarVentas);
 
 function renderFormLocal() {
@@ -271,6 +394,120 @@ $("#form-local").addEventListener("submit", async (e) => {
     });
     toast("✓ Datos del local guardados");
     resumen = await api("/api/admin/resumen");
+  } catch (err) {
+    toast(err.message);
+  }
+});
+
+function renderCamareros() {
+  const cont = $("#camareros-lista");
+  if (!camareros.length) {
+    cont.innerHTML = `<p class="ventas-vacio" style="padding:14px;">Aún no hay camareros creados.</p>`;
+    return;
+  }
+
+  cont.innerHTML = camareros
+    .map(
+      (c) => `
+      <article class="camarero-item">
+        <div class="camarero-item__datos">
+          <strong>${c.usuario}</strong>
+          <small>${c.nombre || "Sin nombre"} ${c.activo === false ? "· Inactivo" : ""}</small>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn-mini btn-mini--editar" data-editar-camarero="${c.id}">Editar</button>
+          <button type="button" class="btn-mini btn-mini--borrar" data-borrar-camarero="${c.id}">Borrar</button>
+        </div>
+      </article>`
+    )
+    .join("");
+
+  cont.querySelectorAll("[data-borrar-camarero]").forEach((btn) => {
+    btn.addEventListener("click", () => borrarCamarero(Number(btn.dataset.borrarCamarero)));
+  });
+  cont.querySelectorAll("[data-editar-camarero]").forEach((btn) => {
+    btn.addEventListener("click", () => editarCamarero(Number(btn.dataset.editarCamarero)));
+  });
+}
+
+$("#form-camarero").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    const payload = {
+      usuario: $("#cam-usuario").value,
+      nombre: $("#cam-nombre").value,
+      password: $("#cam-password").value,
+    };
+    await api("/api/admin/camareros", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    camareros = (await api("/api/admin/camareros")).camareros || [];
+    renderCamareros();
+    $("#form-camarero").reset();
+    toast("✓ Camarero creado");
+  } catch (err) {
+    toast(err.message);
+  }
+});
+
+async function borrarCamarero(id) {
+  if (!confirm("¿Borrar este camarero?")) return;
+  try {
+    await api(`/api/admin/camareros/${id}`, { method: "DELETE" });
+    camareros = camareros.filter((c) => c.id !== id);
+    renderCamareros();
+    toast("✓ Camarero eliminado");
+  } catch (err) {
+    toast(err.message);
+  }
+}
+
+async function editarCamarero(id) {
+  const actual = camareros.find((c) => c.id === id);
+  if (!actual) return;
+  camareroEditando = actual;
+  $("#cam-edit-id").value = actual.id;
+  $("#cam-edit-usuario").value = actual.usuario || "";
+  $("#cam-edit-nombre").value = actual.nombre || "";
+  $("#cam-edit-password").value = "";
+  $("#cam-edit-activo").checked = actual.activo !== false;
+  $("#modal-camarero").hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarModalCamarero() {
+  camareroEditando = null;
+  $("#modal-camarero").hidden = true;
+  document.body.style.overflow = "";
+}
+
+document.querySelectorAll("[data-cerrar-camarero]").forEach((el) => {
+  el.addEventListener("click", cerrarModalCamarero);
+});
+
+$("#form-camarero-editar").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = Number($("#cam-edit-id").value);
+  if (!id || !camareroEditando) return;
+
+  const payload = {
+    usuario: $("#cam-edit-usuario").value.trim(),
+    nombre: $("#cam-edit-nombre").value.trim(),
+    activo: $("#cam-edit-activo").checked,
+  };
+  const pass = $("#cam-edit-password").value.trim();
+  if (pass) payload.password = pass;
+
+  try {
+    await api(`/api/admin/camareros/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+    camareros = (await api("/api/admin/camareros")).camareros || [];
+    renderCamareros();
+    cerrarModalCamarero();
+    toast("✓ Camarero actualizado");
   } catch (err) {
     toast(err.message);
   }

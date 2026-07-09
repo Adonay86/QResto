@@ -2,6 +2,66 @@
   background: #eae8e3;
 }
 
+.login-pantalla {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--color-primario) 0%, #0a2e36 100%);
+}
+
+.login-card {
+  background: white;
+  border-radius: var(--radio);
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: var(--sombra-lg);
+}
+
+.login-card h1 {
+  font-size: 1.35rem;
+  margin-top: 8px;
+  color: var(--color-primario);
+}
+
+.login-card__sub {
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+  margin: 6px 0 24px;
+}
+
+.login-card label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-texto);
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--font);
+  font-size: 1rem;
+  margin-bottom: 16px;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+.login-error {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--color-agotado);
+  text-align: center;
+}
+
 #app-camarero {
   max-width: 900px;
   margin: 0 auto;
@@ -31,6 +91,13 @@
   margin-top: 2px;
 }
 
+.camarero-header__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
 .camarero-header__link {
   color: white;
   font-size: 0.8rem;
@@ -45,6 +112,10 @@
 
 .camarero-header__link:hover {
   background: rgba(255,255,255,0.25);
+}
+
+.camarero-header__link--btn {
+  cursor: pointer;
 }
 
 .alertas {

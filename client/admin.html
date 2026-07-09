@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0c3d47">
   <title>QResto — Panel admin</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap" rel="stylesheet">
@@ -48,6 +49,7 @@
       <button type="button" class="admin-tab activa" data-tab="resumen">Resumen</button>
       <button type="button" class="admin-tab" data-tab="ventas">Ventas hoy</button>
       <button type="button" class="admin-tab" data-tab="carta">Carta</button>
+      <button type="button" class="admin-tab" data-tab="mesas-qr">Mesas QR</button>
       <button type="button" class="admin-tab" data-tab="local">Local</button>
     </nav>
 
@@ -79,6 +81,21 @@
       <div class="productos-admin" id="productos-admin"></div>
     </section>
 
+    <!-- Tab mesas QR -->
+    <section class="admin-seccion" id="tab-mesas-qr" hidden>
+      <div class="qr-toolbar">
+        <p class="qr-toolbar__info" id="qr-base-url"></p>
+        <div class="qr-toolbar__acciones">
+          <button type="button" class="btn-mini btn-mini--editar" id="btn-refrescar-qr">Actualizar</button>
+          <button type="button" class="btn-panel btn-panel--primario" id="btn-imprimir-qr">Imprimir todas</button>
+        </div>
+      </div>
+      <p class="qr-ayuda">
+        Imprime o descarga el QR de cada mesa. Al escanearlo, el cliente abre la carta de esa mesa.
+      </p>
+      <div class="qr-grid" id="qr-grid"></div>
+    </section>
+
     <!-- Tab local -->
     <section class="admin-seccion" id="tab-local" hidden>
       <form id="form-local" class="form-admin">
@@ -90,6 +107,26 @@
         </label>
         <button type="submit" class="btn-panel btn-panel--primario">Guardar cambios</button>
       </form>
+
+      <section class="camareros-admin">
+        <h3>Camareros</h3>
+        <p class="camareros-admin__help">
+          Crea usuarios para que cada camarero entre con su propio acceso.
+        </p>
+        <form id="form-camarero" class="form-admin form-admin--inline">
+          <label>Usuario *
+            <input type="text" id="cam-usuario" placeholder="Ej: ana" required>
+          </label>
+          <label>Nombre
+            <input type="text" id="cam-nombre" placeholder="Ej: Ana Pérez">
+          </label>
+          <label>Contraseña *
+            <input type="password" id="cam-password" placeholder="Mínimo 4 caracteres" required>
+          </label>
+          <button type="submit" class="btn-panel btn-panel--primario">+ Crear camarero</button>
+        </form>
+        <div class="camareros-lista" id="camareros-lista"></div>
+      </section>
     </section>
   </div>
 
@@ -126,6 +163,33 @@
           <input type="checkbox" id="prod-agotado"> Marcar como agotado
         </label>
         <button type="submit" class="btn-panel btn-panel--primario">Guardar producto</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal editar camarero -->
+  <div class="modal" id="modal-camarero" hidden>
+    <div class="modal__backdrop" data-cerrar-camarero></div>
+    <div class="modal__panel">
+      <div class="modal__header">
+        <h2>Editar camarero</h2>
+        <button type="button" class="modal__cerrar" data-cerrar-camarero>&times;</button>
+      </div>
+      <form id="form-camarero-editar" class="modal__body form-admin">
+        <input type="hidden" id="cam-edit-id">
+        <label>Usuario *
+          <input type="text" id="cam-edit-usuario" required minlength="3">
+        </label>
+        <label>Nombre
+          <input type="text" id="cam-edit-nombre">
+        </label>
+        <label>Nueva contraseña
+          <input type="password" id="cam-edit-password" placeholder="Deja vacío para mantener la actual">
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="cam-edit-activo"> Usuario activo
+        </label>
+        <button type="submit" class="btn-panel btn-panel--primario">Guardar cambios</button>
       </form>
     </div>
   </div>

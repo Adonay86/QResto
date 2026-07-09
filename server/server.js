@@ -8,6 +8,7 @@ const carta = require("./carta");
 const auth = require("./auth");
 const ventas = require("./ventas");
 const db = require("./db");
+const camareros = require("./camareros");
 
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +20,14 @@ app.use(express.json());
 
 function emitirEstado() {
   io.emit("estado:actualizado", store.getEstadoPublico());
+}
+
+function getBaseUrl(req) {
+  if (process.env.QRESTO_BASE_URL) {
+    return process.env.QRESTO_BASE_URL.replace(/\/$/, "");
+  }
+  const proto = req.get("x-forwarded-proto") || req.protocol;
+  return `${proto}://${req.get("host")}`;
 }
 
 // ── API pública ──
@@ -50,14 +59,14 @@ app.post("/api/llamar", (req, res) => {
   res.json(resultado);
 });
 
-app.post("/api/mesas/:mesa/atender-llamada", (req, res) => {
+app.post("/api/mesas/:mesa/atender-llamada", auth.camareroMiddleware, (req, res) => {
   const resultado = store.atenderLlamada(req.params.mesa);
   if (resultado.error) return res.status(400).json({ error: resultado.error });
   emitirEstado();
   res.json(resultado);
 });
 
-app.post("/api/mesas/:mesa/pedidos/:id/servido", (req, res) => {
+app.post("/api/mesas/:mesa/pedidos/:id/servido", auth.camareroMiddleware, (req, res) => {
   const resultado = store.marcarPedidoServido(
     req.params.mesa,
     Number(req.params.id)
@@ -67,14 +76,14 @@ app.post("/api/mesas/:mesa/pedidos/:id/servido", (req, res) => {
   res.json(resultado);
 });
 
-app.post("/api/mesas/:mesa/pagado", (req, res) => {
+app.post("/api/mesas/:mesa/pagado", auth.camareroMiddleware, (req, res) => {
   const resultado = store.marcarMesaPagada(req.params.mesa);
   if (resultado.error) return res.status(400).json({ error: resultado.error });
   emitirEstado();
   res.json(resultado);
 });
 
-app.post("/api/mesas/:mesa/liberar", (req, res) => {
+app.post("/api/mesas/:mesa/liberar", auth.camareroMiddleware, (req, res) => {
   const resultado = store.liberarMesa(req.params.mesa);
   if (resultado.error) return res.status(400).json({ error: resultado.error });
   emitirEstado();
@@ -88,6 +97,12 @@ app.post("/api/demo/reset", auth.middleware, (req, res) => {
 });
 
 // ── API admin ──
+app.post("/api/camarero/login", (req, res) => {
+  const resultado = auth.loginCamarero(req.body || {});
+  if (resultado.error) return res.status(401).json(resultado);
+  res.json(resultado);
+});
+
 app.post("/api/admin/login", (req, res) => {
   const resultado = auth.login(req.body.password);
   if (resultado.error) return res.status(401).json(resultado);
@@ -117,6 +132,39 @@ app.put("/api/admin/local", auth.middleware, (req, res) => {
 
 app.get("/api/admin/carta", auth.middleware, (req, res) => {
   res.json(carta.getCarta());
+});
+
+app.get("/api/admin/camareros", auth.middleware, (req, res) => {
+  res.json({ camareros: camareros.listarPublico() });
+});
+
+app.post("/api/admin/camareros", auth.middleware, (req, res) => {
+  const resultado = camareros.crear(req.body || {});
+  if (resultado.error) return res.status(400).json(resultado);
+  res.status(201).json(resultado);
+});
+
+app.put("/api/admin/camareros/:id", auth.middleware, (req, res) => {
+  const resultado = camareros.actualizar(req.params.id, req.body || {});
+  if (resultado.error) return res.status(400).json(resultado);
+  res.json(resultado);
+});
+
+app.delete("/api/admin/camareros/:id", auth.middleware, (req, res) => {
+  const resultado = camareros.eliminar(req.params.id);
+  if (resultado.error) return res.status(404).json(resultado);
+  res.json(resultado);
+});
+
+app.get("/api/admin/mesas-qr", auth.middleware, (req, res) => {
+  const baseUrl = getBaseUrl(req);
+  const local = carta.getLocal();
+  const mesas = store.getEstadoPublico().mesas.map((m) => ({
+    numero: m.numero,
+    estado: m.estado,
+    url: `${baseUrl}/?mesa=${m.numero}`,
+  }));
+  res.json({ baseUrl, local, mesas });
 });
 
 app.post("/api/admin/productos", auth.middleware, (req, res) => {

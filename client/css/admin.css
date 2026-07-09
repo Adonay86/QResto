@@ -203,6 +203,12 @@
   padding: 18px 16px;
   border: 1px solid var(--color-borde);
   box-shadow: var(--sombra-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: var(--sombra);
+  transform: translateY(-1px);
 }
 
 .stat-card__valor {
@@ -532,4 +538,172 @@
   color: var(--color-texto-suave);
   padding: 48px 20px;
   line-height: 1.6;
+}
+
+.camareros-admin {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-borde);
+}
+
+.camareros-admin h3 {
+  font-size: 1rem;
+  color: var(--color-primario);
+  margin-bottom: 4px;
+}
+
+.camareros-admin__help {
+  font-size: 0.82rem;
+  color: var(--color-texto-suave);
+  margin-bottom: 12px;
+}
+
+.form-admin--inline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.camareros-lista {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.camarero-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  padding: 10px 12px;
+}
+
+.camarero-item__datos strong {
+  color: var(--color-primario);
+  font-size: 0.9rem;
+}
+
+.camarero-item__datos small {
+  display: block;
+  margin-top: 2px;
+  color: var(--color-texto-suave);
+  font-size: 0.75rem;
+}
+
+#modal-camarero .modal__body {
+  padding: 16px 20px 24px;
+}
+
+/* Mesas QR */
+.qr-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.qr-toolbar__info {
+  font-size: 0.8rem;
+  color: var(--color-texto-suave);
+}
+
+.qr-toolbar__info code {
+  background: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.qr-toolbar__acciones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.qr-ayuda {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.qr-card {
+  background: white;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 14px;
+  text-align: center;
+  box-shadow: var(--sombra-sm);
+}
+
+.qr-card__mesa {
+  font-weight: 700;
+  color: var(--color-primario);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.qr-card__estado {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+  color: var(--color-texto-suave);
+}
+
+.qr-card__estado--ocupada { color: #b45309; }
+.qr-card__estado--atencion { color: #dc2626; }
+.qr-card__estado--libre { color: #059669; }
+
+.qr-card__img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  border: 2px solid var(--color-borde);
+  margin: 0 auto 10px;
+  display: block;
+}
+
+.qr-card__url {
+  font-size: 0.65rem;
+  color: var(--color-texto-suave);
+  word-break: break-all;
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+
+.qr-card__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.qr-card__acciones a,
+.qr-card__acciones button {
+  font-size: 0.75rem;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #qr-print-area, #qr-print-area * { visibility: visible; }
+  #qr-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
 }

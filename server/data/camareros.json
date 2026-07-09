@@ -1,0 +1,13 @@
+{
+  "seq": 5,
+  "usuarios": [
+    {
+      "id": 4,
+      "usuario": "adonay",
+      "nombre": "adonay",
+      "passwordHash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      "activo": true,
+      "creadoEn": "2026-07-09T09:40:46.937Z"
+    }
+  ]
+}
