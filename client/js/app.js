@@ -1,10 +1,11 @@
-import { ALERGENOS_LABEL, formatoPrecio } from "./utils.js";
-import { IMAGEN_FALLBACK } from "./constants.js";
+import { ALERGENOS_LABEL, formatoPrecio, formatearLineaProducto } from "./utils.js";
+import { IMAGEN_FALLBACK, OPCIONES_BEBIDA, OPCIONES_BEBIDA_LABEL } from "./constants.js";
 import { $, crearToast } from "./dom.js";
 import { enviarPedido, llamarCamarero, obtenerPedidosMesa } from "./api.js";
 import {
   anadirProducto,
   cambiarCantidad,
+  etiquetaOpciones,
   getCantidadTotal,
   getCarrito,
   getTotal,
@@ -17,6 +18,7 @@ const mesa = params.get("mesa") || "1";
 let carta = { categorias: [], productos: [] };
 let categoriaActiva = null;
 let pedidosActivos = [];
+let productoOpcionesPendiente = null;
 
 const toast = crearToast("#toast", 2200);
 
@@ -127,7 +129,10 @@ function renderProductos() {
       const producto = carta.productos.find(
         (p) => p.id === Number(btn.dataset.id)
       );
-      if (producto && !producto.agotado) {
+      if (!producto || producto.agotado) return;
+      if (producto.opcionesBebida) {
+        abrirModalOpciones(producto);
+      } else {
         anadirProducto(producto);
         actualizarCarritoUI();
         toast(`✓ ${producto.nombre} añadido`);
@@ -136,6 +141,41 @@ function renderProductos() {
   });
 
   renderPedidoActivo();
+}
+
+function abrirModalOpciones(producto) {
+  productoOpcionesPendiente = producto;
+  $("#opciones-titulo").textContent = producto.nombre;
+  $("#opciones-checks").innerHTML = OPCIONES_BEBIDA.map(
+    (o) => `
+    <label class="opcion-check">
+      <input type="checkbox" name="opcion-bebida" value="${o.id}">
+      <span>${o.label}</span>
+    </label>`
+  ).join("");
+  abrirModal("modal-opciones");
+}
+
+function getOpcionesSeleccionadas() {
+  return [...document.querySelectorAll('input[name="opcion-bebida"]:checked')].map(
+    (el) => el.value
+  );
+}
+
+function cerrarModalOpciones() {
+  productoOpcionesPendiente = null;
+  cerrarModal("modal-opciones");
+}
+
+function confirmarOpciones() {
+  const producto = productoOpcionesPendiente;
+  if (!producto) return;
+  const opciones = getOpcionesSeleccionadas();
+  anadirProducto(producto, opciones);
+  actualizarCarritoUI();
+  const extra = etiquetaOpciones(opciones, OPCIONES_BEBIDA_LABEL);
+  toast(extra ? `✓ ${producto.nombre} · ${extra}` : `✓ ${producto.nombre} añadido`);
+  cerrarModalOpciones();
 }
 
 function renderPedidoActivo() {
@@ -162,7 +202,7 @@ function renderPedidoActivo() {
       .map(
         (l) => `
       <div class="pedido-activo__linea">
-        <span>${l.cantidad}× ${l.nombre} ${l.estado === "servido" ? "✓" : ""}</span>
+        <span>${formatearLineaProducto(l)} ${l.estado === "servido" ? "✓" : ""}</span>
         <span>${formatoPrecio(l.precio * l.cantidad)}</span>
       </div>`
       )
@@ -178,6 +218,12 @@ function miniaturaCarrito(item) {
       onerror="this.style.display='none'">`;
   }
   return `<div class="carrito-linea__img carrito-linea__img--placeholder">🍽️</div>`;
+}
+
+function nombreCarrito(item) {
+  const extra = etiquetaOpciones(item.opciones, OPCIONES_BEBIDA_LABEL);
+  if (!extra) return item.nombre;
+  return `${item.nombre} · ${extra}`;
 }
 
 function actualizarCarritoUI() {
@@ -202,13 +248,13 @@ function actualizarCarritoUI() {
     <div class="carrito-linea">
       ${miniaturaCarrito(item)}
       <div class="carrito-linea__info">
-        <div class="carrito-linea__nombre">${item.nombre}</div>
+        <div class="carrito-linea__nombre">${nombreCarrito(item)}</div>
         <div class="carrito-linea__precio">${formatoPrecio(item.precio)} / ud.</div>
       </div>
       <div class="carrito-linea__cantidad">
-        <button type="button" data-id="${item.id}" data-delta="-1" aria-label="Quitar">−</button>
+        <button type="button" data-clave="${item.clave}" data-delta="-1" aria-label="Quitar">−</button>
         <span>${item.cantidad}</span>
-        <button type="button" data-id="${item.id}" data-delta="1" aria-label="Añadir">+</button>
+        <button type="button" data-clave="${item.clave}" data-delta="1" aria-label="Añadir">+</button>
       </div>
     </div>`
     )
@@ -216,7 +262,7 @@ function actualizarCarritoUI() {
 
   lista.querySelectorAll("button[data-delta]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      cambiarCantidad(Number(btn.dataset.id), Number(btn.dataset.delta));
+      cambiarCantidad(btn.dataset.clave, Number(btn.dataset.delta));
       actualizarCarritoUI();
     });
   });
@@ -264,7 +310,9 @@ $("#btn-confirmar").addEventListener("click", async () => {
 
   try {
     await enviarPedido(mesa, lineas);
-    const resumen = lineas.map((i) => `${i.cantidad}× ${i.nombre}`).join(", ");
+    const resumen = lineas
+      .map((i) => formatearLineaProducto(i))
+      .join(", ");
     $("#pedido-resumen").textContent = resumen || "Tu pedido ha llegado a cocina.";
     vaciarCarrito();
     actualizarCarritoUI();
@@ -280,12 +328,18 @@ $("#btn-confirmar").addEventListener("click", async () => {
   }
 });
 
+$("#btn-opciones-anadir").addEventListener("click", confirmarOpciones);
+
 document.querySelectorAll("[data-cerrar]").forEach((el) => {
   el.addEventListener("click", () => cerrarModal("modal-carrito"));
 });
 
 document.querySelectorAll("[data-cerrar-pedido]").forEach((el) => {
   el.addEventListener("click", () => cerrarModal("modal-pedido"));
+});
+
+document.querySelectorAll("[data-cerrar-opciones]").forEach((el) => {
+  el.addEventListener("click", cerrarModalOpciones);
 });
 
 cargarDatos().catch(() => {

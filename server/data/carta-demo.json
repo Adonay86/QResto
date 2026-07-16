@@ -25,7 +25,7 @@
       "precio": 5.5,
       "alergenos": [],
       "agotado": false,
-      "imagen": "https://images.unsplash.com/photo-1574489441777-0a9166271667?w=600&h=450&fit=crop&q=80"
+      "imagen": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=450&fit=crop&q=80"
     },
     {
       "id": 2,
@@ -37,7 +37,7 @@
         "lacteos"
       ],
       "agotado": false,
-      "imagen": "https://images.unsplash.com/photo-1452195100486-9c89d7041f08?w=600&h=450&fit=crop&q=80"
+      "imagen": "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=600&h=450&fit=crop&q=80"
     },
     {
       "id": 3,
@@ -51,7 +51,7 @@
         "huevo"
       ],
       "agotado": false,
-      "imagen": "https://images.unsplash.com/photo-1600891964595-f61ba0e8f216?w=600&h=450&fit=crop&q=80"
+      "imagen": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&h=450&fit=crop&q=80"
     },
     {
       "id": 4,
@@ -73,7 +73,7 @@
       "precio": 11,
       "alergenos": [],
       "agotado": false,
-      "imagen": "https://images.unsplash.com/photo-1598103442097-257294eff650?w=600&h=450&fit=crop&q=80"
+      "imagen": "https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=600&h=450&fit=crop&q=80"
     },
     {
       "id": 6,
@@ -98,6 +98,7 @@
         "gluten"
       ],
       "agotado": false,
+      "opcionesBebida": true,
       "imagen": "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&h=450&fit=crop&q=80"
     },
     {
@@ -120,7 +121,7 @@
       "precio": 1.8,
       "alergenos": [],
       "agotado": false,
-      "imagen": "https://images.unsplash.com/photo-1548839140-29a7493501f5?w=600&h=450&fit=crop&q=80"
+      "imagen": "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=600&h=450&fit=crop&q=80"
     },
     {
       "id": 10,
@@ -135,12 +136,24 @@
     {
       "id": 11,
       "categoria": "bebidas",
-      "nombre": "cocacola",
-      "descripcion": "cocacola normal",
+      "nombre": "Coca-Cola",
+      "descripcion": "Coca-Cola normal.",
       "precio": 2,
       "alergenos": [],
-      "agotado": true,
-      "imagen": ""
+      "agotado": false,
+      "opcionesBebida": true,
+      "imagen": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=600&h=450&fit=crop&q=80"
+    },
+    {
+      "id": 12,
+      "categoria": "bebidas",
+      "nombre": "Coca-Cola Zero",
+      "descripcion": "Sin azúcar.",
+      "precio": 1.5,
+      "alergenos": [],
+      "agotado": false,
+      "opcionesBebida": true,
+      "imagen": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=600&h=450&fit=crop&q=80"
     }
   ]
 }

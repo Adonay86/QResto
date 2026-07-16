@@ -24,6 +24,7 @@ async function cargarDesdeMysql() {
   const productos = productosRows.map((p) => ({
     ...p,
     agotado: Boolean(p.agotado),
+    opcionesBebida: false,
     alergenos:
       typeof p.alergenos === "string" ? JSON.parse(p.alergenos) : p.alergenos || [],
   }));
@@ -125,6 +126,7 @@ function crearProducto(datos) {
     precio: Number(datos.precio),
     alergenos: datos.alergenos || [],
     agotado: Boolean(datos.agotado),
+    opcionesBebida: Boolean(datos.opcionesBebida),
     imagen: datos.imagen?.trim() || "",
   };
 
@@ -155,6 +157,10 @@ function actualizarProducto(id, datos) {
     precio: datos.precio !== undefined ? Number(datos.precio) : actual.precio,
     alergenos: datos.alergenos ?? actual.alergenos,
     agotado: datos.agotado !== undefined ? Boolean(datos.agotado) : actual.agotado,
+    opcionesBebida:
+      datos.opcionesBebida !== undefined
+        ? Boolean(datos.opcionesBebida)
+        : Boolean(actual.opcionesBebida),
     imagen: datos.imagen !== undefined ? datos.imagen.trim() : actual.imagen,
   };
 

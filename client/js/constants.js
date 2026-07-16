@@ -18,3 +18,15 @@ export const ESTADO_MESA = {
   ocupada: "Ocupada",
   atencion: "Llama",
 };
+
+/** Opciones fijas de bebida (multi-selección en carta) */
+export const OPCIONES_BEBIDA = [
+  { id: "fria", label: "Fría" },
+  { id: "natural", label: "Natural" },
+  { id: "hielo", label: "Con hielo" },
+  { id: "limon", label: "Con limón" },
+];
+
+export const OPCIONES_BEBIDA_LABEL = Object.fromEntries(
+  OPCIONES_BEBIDA.map((o) => [o.id, o.label])
+);

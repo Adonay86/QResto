@@ -1,4 +1,4 @@
-import { ALERGENOS_LABEL, formatoPrecio, formatearHora, etiquetaEstadoPedido } from "./utils.js";
+import { ALERGENOS_LABEL, formatoPrecio, formatearHora, etiquetaEstadoPedido, formatearLineaProducto } from "./utils.js";
 import { TOKEN_KEY, SOCKET_EVENT, IMAGEN_FALLBACK } from "./constants.js";
 import { $, crearToast } from "./dom.js";
 import { crearApiAdmin } from "./api.js";
@@ -11,6 +11,9 @@ let resumen = null;
 let camareros = [];
 let camareroEditando = null;
 let socket = null;
+let ventasFechaSeleccionada = null;
+let ventasDiasDisponibles = [];
+let ventasHoyIso = null;
 
 const toast = crearToast("#toast-admin");
 const api = crearApiAdmin(() => token, logout);
@@ -175,11 +178,21 @@ async function actualizarResumen() {
   }
 }
 
-async function actualizarVentas() {
+async function actualizarVentas(fechaForzada) {
   try {
-    const data = await api("/api/admin/ventas-hoy");
+    await cargarDiasVentas();
+
+    const fecha = fechaForzada || ventasFechaSeleccionada || ventasHoyIso;
+    ventasFechaSeleccionada = fecha;
+    const input = $("#ventas-fecha-input");
+    if (input && input.value !== fecha) input.value = fecha;
+
+    const data = await api(`/api/admin/ventas?fecha=${encodeURIComponent(fecha)}`);
+    if (data.hoy) ventasHoyIso = data.hoy;
     renderVentas(data);
-    if (resumen) {
+    renderDiasChips();
+
+    if (resumen && fecha === ventasHoyIso) {
       resumen.ventas = data.resumen;
       renderResumen();
     }
@@ -188,16 +201,74 @@ async function actualizarVentas() {
   }
 }
 
+async function cargarDiasVentas() {
+  try {
+    const data = await api("/api/admin/ventas/dias");
+    ventasDiasDisponibles = data.dias || [];
+    ventasHoyIso = data.hoy;
+    if (!ventasFechaSeleccionada) ventasFechaSeleccionada = ventasHoyIso;
+    const input = $("#ventas-fecha-input");
+    if (input) {
+      input.value = ventasFechaSeleccionada;
+      input.max = ventasHoyIso;
+    }
+  } catch {
+    ventasDiasDisponibles = [];
+  }
+}
+
+function sumarDiasIso(fechaIso, delta) {
+  const d = new Date(fechaIso + "T12:00:00");
+  d.setDate(d.getDate() + delta);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function renderDiasChips() {
+  const cont = $("#ventas-dias-chips");
+  if (!cont) return;
+
+  const recientes = ventasDiasDisponibles.slice(0, 8);
+  if (!recientes.length) {
+    cont.hidden = true;
+    cont.innerHTML = "";
+    return;
+  }
+
+  cont.hidden = false;
+  cont.innerHTML = recientes
+    .map((f) => {
+      const d = new Date(f + "T12:00:00");
+      const label = d.toLocaleDateString("es-ES", {
+        day: "numeric",
+        month: "short",
+      });
+      const activo = f === ventasFechaSeleccionada ? "activo" : "";
+      const hoy = f === ventasHoyIso ? " · hoy" : "";
+      return `<button type="button" class="ventas-dia-chip ${activo}" data-fecha="${f}">${label}${hoy}</button>`;
+    })
+    .join("");
+
+  cont.querySelectorAll("[data-fecha]").forEach((btn) => {
+    btn.addEventListener("click", () => actualizarVentas(btn.dataset.fecha));
+  });
+}
+
 function renderVentas(data) {
   const lista = $("#ventas-lista");
   const productos = $("#ventas-productos");
-  const fecha = new Date(data.resumen.fecha + "T12:00:00");
+  const fechaIso = data.resumen.fecha;
+  const fecha = new Date(fechaIso + "T12:00:00");
+  const esHoy = fechaIso === (data.hoy || ventasHoyIso);
   $("#ventas-fecha").textContent =
-    "Registro del " +
+    (esHoy ? "Hoy · " : "") +
     fecha.toLocaleDateString("es-ES", {
       weekday: "long",
       day: "numeric",
       month: "long",
+      year: "numeric",
     });
 
   const items = data.productos || [];
@@ -205,7 +276,7 @@ function renderVentas(data) {
   if (items.length === 0) {
     productos.innerHTML = `
       <p class="ventas-vacio" style="padding:24px;">
-        Aún no se ha vendido ningún producto hoy.
+        No hay productos vendidos en este día.
       </p>`;
   } else {
     productos.innerHTML = items
@@ -226,7 +297,7 @@ function renderVentas(data) {
   if (!data.registros.length) {
     lista.innerHTML = `
       <p class="ventas-vacio">
-        No hay pedidos individuales registrados todavía.
+        No hay pedidos registrados para este día.
       </p>`;
     return;
   }
@@ -237,7 +308,7 @@ function renderVentas(data) {
         .map(
           (l) => `
         <div class="venta-registro__linea">
-          <span>${l.cantidad}× ${l.nombre}</span>
+          <span>${formatearLineaProducto(l)}</span>
           <span>${formatoPrecio(l.precio * l.cantidad)}</span>
         </div>`
         )
@@ -375,7 +446,29 @@ function imprimirTodasQr() {
 $("#btn-refrescar-qr").addEventListener("click", actualizarMesasQr);
 $("#btn-imprimir-qr").addEventListener("click", imprimirTodasQr);
 
-$("#btn-refrescar-ventas").addEventListener("click", actualizarVentas);
+$("#btn-refrescar-ventas").addEventListener("click", () => actualizarVentas());
+
+$("#ventas-fecha-input").addEventListener("change", (e) => {
+  actualizarVentas(e.target.value);
+});
+
+$("#btn-ventas-prev").addEventListener("click", () => {
+  const base = ventasFechaSeleccionada || ventasHoyIso;
+  if (!base) return;
+  actualizarVentas(sumarDiasIso(base, -1));
+});
+
+$("#btn-ventas-next").addEventListener("click", () => {
+  const base = ventasFechaSeleccionada || ventasHoyIso;
+  if (!base || !ventasHoyIso) return;
+  const siguiente = sumarDiasIso(base, 1);
+  if (siguiente > ventasHoyIso) return;
+  actualizarVentas(siguiente);
+});
+
+$("#btn-ventas-hoy").addEventListener("click", () => {
+  if (ventasHoyIso) actualizarVentas(ventasHoyIso);
+});
 
 function renderFormLocal() {
   $("#local-nombre").value = resumen.local.nombre || "";
@@ -543,7 +636,7 @@ function renderProductosAdmin() {
           onerror="this.src='${IMAGEN_FALLBACK}'">
         <div class="prod-admin-card__info">
           <div class="prod-admin-card__nombre">${p.nombre}</div>
-          <div class="prod-admin-card__meta">${cat?.nombre || p.categoria} ${p.agotado ? "· Agotado" : ""}</div>
+          <div class="prod-admin-card__meta">${cat?.nombre || p.categoria} ${p.agotado ? "· Agotado" : ""}${p.opcionesBebida ? " · Opciones bebida" : ""}</div>
           <div class="prod-admin-card__precio">${formatoPrecio(p.precio)}</div>
         </div>
         <div class="prod-admin-card__acciones">
@@ -614,6 +707,7 @@ function abrirEditar(id) {
   $("#prod-precio").value = p.precio;
   $("#prod-imagen").value = p.imagen || "";
   $("#prod-agotado").checked = p.agotado;
+  $("#prod-opciones-bebida").checked = Boolean(p.opcionesBebida);
   setAlergenosSeleccionados(p.alergenos);
   $("#modal-producto").hidden = false;
   document.body.style.overflow = "hidden";
@@ -640,6 +734,7 @@ $("#form-producto").addEventListener("submit", async (e) => {
     precio: $("#prod-precio").value,
     imagen: $("#prod-imagen").value,
     agotado: $("#prod-agotado").checked,
+    opcionesBebida: $("#prod-opciones-bebida").checked,
     alergenos: getAlergenosSeleccionados(),
   };
 

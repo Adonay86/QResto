@@ -47,7 +47,7 @@
 
     <nav class="admin-tabs">
       <button type="button" class="admin-tab activa" data-tab="resumen">Resumen</button>
-      <button type="button" class="admin-tab" data-tab="ventas">Ventas hoy</button>
+      <button type="button" class="admin-tab" data-tab="ventas">Ventas</button>
       <button type="button" class="admin-tab" data-tab="carta">Carta</button>
       <button type="button" class="admin-tab" data-tab="mesas-qr">Mesas QR</button>
       <button type="button" class="admin-tab" data-tab="local">Local</button>
@@ -58,14 +58,21 @@
       <div class="stats-grid" id="stats-grid"></div>
     </section>
 
-    <!-- Tab ventas hoy -->
+    <!-- Tab ventas (historial por día) -->
     <section class="admin-seccion" id="tab-ventas" hidden>
       <div class="ventas-header">
-        <p class="ventas-fecha" id="ventas-fecha"></p>
+        <div class="ventas-fecha-nav">
+          <button type="button" class="btn-mini btn-mini--editar" id="btn-ventas-prev" aria-label="Día anterior">‹</button>
+          <input type="date" id="ventas-fecha-input" class="ventas-date-input" aria-label="Elegir día">
+          <button type="button" class="btn-mini btn-mini--editar" id="btn-ventas-next" aria-label="Día siguiente">›</button>
+          <button type="button" class="btn-mini btn-mini--editar" id="btn-ventas-hoy">Hoy</button>
+        </div>
         <button type="button" class="btn-mini btn-mini--editar" id="btn-refrescar-ventas">Actualizar</button>
       </div>
+      <p class="ventas-fecha" id="ventas-fecha"></p>
+      <div class="ventas-dias-chips" id="ventas-dias-chips" hidden></div>
 
-      <h3 class="ventas-subtitulo">Productos vendidos hoy</h3>
+      <h3 class="ventas-subtitulo" id="ventas-subtitulo-productos">Productos vendidos</h3>
       <div class="ventas-productos" id="ventas-productos"></div>
 
       <h3 class="ventas-subtitulo ventas-subtitulo--sep">Detalle pedido a pedido</h3>
@@ -161,6 +168,9 @@
         </fieldset>
         <label class="checkbox-label">
           <input type="checkbox" id="prod-agotado"> Marcar como agotado
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="prod-opciones-bebida"> Tiene opciones de bebida (fría, natural, hielo, limón)
         </label>
         <button type="submit" class="btn-panel btn-panel--primario">Guardar producto</button>
       </form>

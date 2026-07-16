@@ -61,6 +61,25 @@
       </button>
     </footer>
 
+    <!-- Modal opciones de bebida -->
+    <div class="modal" id="modal-opciones" hidden>
+      <div class="modal__backdrop" data-cerrar-opciones></div>
+      <div class="modal__panel">
+        <div class="modal__header">
+          <h2 id="opciones-titulo">Opciones</h2>
+          <button type="button" class="modal__cerrar" data-cerrar-opciones aria-label="Cerrar">&times;</button>
+        </div>
+        <div class="modal__body">
+          <p class="opciones-hint">¿Cómo la quieres? Puedes elegir varias.</p>
+          <div class="opciones-checks" id="opciones-checks"></div>
+        </div>
+        <div class="modal__footer opciones-footer">
+          <button type="button" class="btn btn--secundario" data-cerrar-opciones>Cancelar</button>
+          <button type="button" class="btn btn--confirmar" id="btn-opciones-anadir">Añadir al pedido</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal carrito -->
     <div class="modal" id="modal-carrito" hidden>
       <div class="modal__backdrop" data-cerrar></div>

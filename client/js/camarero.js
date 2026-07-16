@@ -1,4 +1,4 @@
-import { formatoPrecio, etiquetaEstadoMesa, etiquetaEstadoPedido } from "./utils.js";
+import { formatoPrecio, etiquetaEstadoMesa, etiquetaEstadoPedido, formatearLineaProducto } from "./utils.js";
 import { SOCKET_EVENT } from "./constants.js";
 import { $, crearToast } from "./dom.js";
 import { obtenerLocal } from "./api.js";
@@ -161,7 +161,7 @@ function renderDetalleMesa(numero) {
           .map(
             (l) => `
           <div class="pedido-detalle__linea">
-            <span>${l.cantidad}× ${l.nombre}</span>
+            <span>${formatearLineaProducto(l)}</span>
             <span>${formatoPrecio(l.precio * l.cantidad)}</span>
           </div>`
           )

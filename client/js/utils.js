@@ -1,4 +1,4 @@
-import { ESTADO_MESA, ESTADO_PEDIDO } from "./constants.js";
+import { ESTADO_MESA, ESTADO_PEDIDO, OPCIONES_BEBIDA_LABEL } from "./constants.js";
 
 const ALERGENOS_LABEL = {
   gluten: "Gluten",
@@ -26,10 +26,21 @@ function etiquetaEstadoMesa(estado) {
   return ESTADO_MESA[estado] || estado;
 }
 
+function formatearLineaProducto(linea) {
+  const base = `${linea.cantidad}× ${linea.nombre}`;
+  if (!linea.opciones?.length) return base;
+  const ops = linea.opciones
+    .map((o) => OPCIONES_BEBIDA_LABEL[o] || o)
+    .join(" · ");
+  return `${base} · ${ops}`;
+}
+
 export {
   ALERGENOS_LABEL,
+  OPCIONES_BEBIDA_LABEL,
   formatoPrecio,
   formatearHora,
   etiquetaEstadoPedido,
   etiquetaEstadoMesa,
+  formatearLineaProducto,
 };

@@ -116,11 +116,31 @@ app.get("/api/admin/resumen", auth.middleware, (req, res) => {
   });
 });
 
-app.get("/api/admin/ventas-hoy", auth.middleware, (req, res) => {
+app.get("/api/admin/ventas-hoy", auth.middleware, async (req, res) => {
+  const hoy = ventas.fechaHoy();
+  const data = await ventas.getVentasFecha(hoy);
   res.json({
     resumen: store.getResumenDia(),
-    productos: ventas.getResumenProductos(),
-    registros: store.getHistorialVentas(),
+    productos: data.productos,
+    registros: data.registros,
+  });
+});
+
+app.get("/api/admin/ventas/dias", auth.middleware, async (req, res) => {
+  const dias = await ventas.getDiasConVentas();
+  res.json({ dias, hoy: ventas.fechaHoy() });
+});
+
+app.get("/api/admin/ventas", auth.middleware, async (req, res) => {
+  const fecha = String(req.query.fecha || ventas.fechaHoy()).slice(0, 10);
+  const data = await ventas.getVentasFecha(fecha);
+  const esHoy = fecha === ventas.fechaHoy();
+  res.json({
+    ...data,
+    resumen: esHoy
+      ? store.getResumenDia()
+      : data.resumen,
+    hoy: ventas.fechaHoy(),
   });
 });
 
@@ -201,6 +221,7 @@ async function arrancar() {
   await db.init();
   await carta.init();
   await ventas.init();
+  store.sincronizarSecuenciaPedidos();
 
   server.listen(PORT, () => {
     console.log(`\n  QResto corriendo en http://localhost:${PORT}`);

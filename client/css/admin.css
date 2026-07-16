@@ -398,18 +398,65 @@
   padding: 16px 20px 24px;
 }
 
-/* Ventas hoy */
+/* Ventas historial */
 .ventas-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ventas-fecha-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ventas-date-input {
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-sm, 8px);
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--color-texto);
+  background: var(--color-blanco, #fff);
 }
 
 .ventas-fecha {
   font-size: 0.9rem;
   color: var(--color-texto-suave);
+  margin-bottom: 12px;
+}
+
+.ventas-dias-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.ventas-dia-chip {
+  border: 1.5px solid var(--color-borde);
+  background: var(--color-blanco, #fff);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-texto);
+}
+
+.ventas-dia-chip:hover {
+  border-color: var(--color-primario);
+}
+
+.ventas-dia-chip.activo {
+  background: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
 }
 
 .ventas-subtitulo {

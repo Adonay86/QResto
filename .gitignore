@@ -3,3 +3,6 @@ node_modules/
 client/node_modules/
 server/data/local.json
 server/data/ventas-hoy.json
+server/data/ventas-hoy.json.migrado
+server/data/ventas/*.json
+!server/data/ventas/.gitkeep

@@ -22,6 +22,13 @@ function crearEstadoInicial() {
 
 let state = crearEstadoInicial();
 
+/** Continuar la secuencia desde ventas del día para no reutilizar IDs tras reiniciar. */
+function sincronizarSecuenciaPedidos() {
+  state.pedidoSeq = Math.max(state.pedidoSeq, ventas.getMaxPedidoId());
+}
+
+sincronizarSecuenciaPedidos();
+
 function getEstadoPublico() {
   return {
     mesas: Object.values(state.mesas).map((m) => ({
@@ -100,7 +107,7 @@ function marcarPedidoServido(mesaNum, pedidoId) {
   if (!pedido) return { error: "Pedido no encontrado" };
 
   pedido.estado = "servido";
-  ventas.actualizarEstado(pedidoId, "servido");
+  ventas.actualizarEstado(pedidoId, "servido", mesa.numero);
   return { mesa: mesa.numero, pedidoId };
 }
 
@@ -128,6 +135,7 @@ function liberarMesa(mesaNum) {
 
 function resetDemo() {
   state = crearEstadoInicial();
+  sincronizarSecuenciaPedidos();
 }
 
 function getResumenDia() {
@@ -159,4 +167,5 @@ module.exports = {
   marcarMesaPagada,
   liberarMesa,
   resetDemo,
+  sincronizarSecuenciaPedidos,
 };
